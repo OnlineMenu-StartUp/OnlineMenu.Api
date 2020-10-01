@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OnlineMenu.Application.Order;
 using MediatR;
 
 namespace OnlineMenu.Api
@@ -28,6 +29,8 @@ namespace OnlineMenu.Api
         {
             services.AddControllers();
 
+            services.AddMediatR(
+                typeof(GetOrderByIdQuerry));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

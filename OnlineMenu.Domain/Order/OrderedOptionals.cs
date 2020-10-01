@@ -1,5 +1,5 @@
 ﻿using System;
-namespace OnlineMenu.Domain
+namespace OnlineMenu.Domain.Order
 {
     public class OrderedOptionals
     {

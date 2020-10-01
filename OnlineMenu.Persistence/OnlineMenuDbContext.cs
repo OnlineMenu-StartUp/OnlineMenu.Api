@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Order;
 
 namespace OnlineMenu.Persistence
 {

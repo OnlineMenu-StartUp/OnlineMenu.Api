@@ -4,4 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Order\" />
+    <Folder Include="Order\Dto\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineMenu.Domain\OnlineMenu.Domain.csproj" />
+  </ItemGroup>
 </Project>
