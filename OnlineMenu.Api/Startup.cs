@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using OnlineMenu.Application;
+using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api
 {
@@ -26,6 +29,9 @@ namespace OnlineMenu.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.ConfigureDbContext(Configuration.GetConnectionString("RemoteConnection"));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
