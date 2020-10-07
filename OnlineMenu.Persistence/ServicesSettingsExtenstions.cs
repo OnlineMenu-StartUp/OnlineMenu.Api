@@ -9,7 +9,7 @@ public static class ServiceSettingsExtensions {
         {
             services
                 .AddDbContext<IOnlineMenuContext, OnlineMenuContext>(options => 
-                options.UseSqlServer(conntectionString));
+                options.UseSqlServer(conntectionString, x => x.MigrationsAssembly("OnlineMenu.Persistence")));
         }
 
 }
