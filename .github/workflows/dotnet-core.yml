@@ -33,7 +33,7 @@ jobs:
           cd OnlineMenu.Api && echo "Went to OnlineMenu.Api project" && 
           sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ secrets.connection_string }}"/g' appsettings.json && 
           dotnet publish --configuration Release && echo "Built the project" && 
-          service online-menu-api restart echo "Restarted project service" 
+          service online-menu-api restart && echo "Restarted project service" 
 
         host: ${{ secrets.remote_host }}
         username: ${{ secrets.remote_user }}
