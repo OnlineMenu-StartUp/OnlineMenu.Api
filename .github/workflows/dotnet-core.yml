@@ -27,13 +27,13 @@ jobs:
       uses: garygrossgarten/github-action-ssh@v0.3.0
       with: # pull changes, replace conn string, build, and restart service
         command: >
-          cd /home/Projects/OnlineMenu.Api && 
-          git reset --hard && 
-          git pull https://${{ secrets.git_hub_username }}:${{ secrets.git_hub_password }}@github.com/OnlineMenu-StartUp/OnlineMenu.Api.git && 
-          cd OnlineMenu.Api && 
-          sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ secrets.connection_string }}"/g' appsettings.json && 
-          dotnet publish --configuration Release && 
-          service online-menu-api restart
+          cd /home/Projects/OnlineMenu.Api && echo "Went to OnlineMenu.Api solution" && 
+          git reset --hard && echo "Removed previous changes" && 
+          git pull https://${{ secrets.git_hub_username }}:${{ secrets.git_hub_password }}@github.com/OnlineMenu-StartUp/OnlineMenu.Api.git && echo "Pulled new changes from github" && 
+          cd OnlineMenu.Api && echo "Went to OnlineMenu.Api project" && 
+          sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ connection_string }}"/g' appsettings.json && 
+          dotnet publish --configuration Release && echo "Built the project" && 
+          service online-menu-api restart echo "Restarted project service" 
 
         host: ${{ secrets.remote_host }}
         username: ${{ secrets.remote_user }}
