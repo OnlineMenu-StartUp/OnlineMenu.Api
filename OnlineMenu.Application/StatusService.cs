@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Application
 {
@@ -18,9 +20,16 @@ namespace OnlineMenu.Application
         }
 
         public Status CreateStatus(Status status)
-        { 
-            _ctx.Statuses.Add(status);
+        {
+            var alreadyExists = _ctx.Statuses.Any(s => s.Name == status.Name);
+            if (alreadyExists)
+            {
+                throw new BadValueException($"The value [{status.Name}] already exists");
+            }
+            
+            _ctx.Statuses.Add(status); 
             _ctx.SaveChanges();
+            
             return status;
         }
     }
