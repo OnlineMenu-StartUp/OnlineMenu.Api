@@ -38,7 +38,7 @@ jobs:
         # username
         username: ${{ secrets.remote_user }}
         server: ${{ secrets.remote_host }}
-        ssh_private_key: '${{ secrets.ssh_private_key }}'
+        ssh_private_key: ${{ secrets.ssh_private_key }}
         local_path: './OnlineMenu.Api/OnlineMenu.Api/bin/'
         remote_path: ${{ secrets.target }}
         args: -o ConnectTimeout=5
@@ -48,4 +48,4 @@ jobs:
         command: sudo service online-menu-api restart
         host: ${{ secrets.remote_host }}
         username: ${{ secrets.remote_user }}
-        privateKey: '${{ secrets.ssh_private_key }}'
+        privateKey: ${{ secrets.ssh_private_key }}
