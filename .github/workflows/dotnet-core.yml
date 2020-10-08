@@ -31,7 +31,7 @@ jobs:
           git reset --hard && 
           git pull https://${{ secrets.git_hub_username }}:${{ secrets.git_hub_password }}@github.com/OnlineMenu-StartUp/OnlineMenu.Api.git && 
           cd OnlineMenu.Api && 
-          sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ connection_string }}"/g' appsettings.json && 
+          sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ secrets.connection_string }}"/g' appsettings.json && 
           dotnet publish --configuration Release && 
           service online-menu-api restart
 
