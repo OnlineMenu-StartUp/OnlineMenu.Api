@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using OnlineMenu.Domain;
 
 namespace OnlineMenu.Application
 {
     public class OrderService
     {
-        private readonly IOnlineMenuContext _context;
+        private readonly IOnlineMenuContext context;
 
         public OrderService(IOnlineMenuContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
-        public Order GetOrder(int id)
+        public async Task<Order> GetOrder(int id)
         {
-            return _context.Orders.First(o => o.Id == id);
+            return await context.Orders.FindAsync(id);
         }
     }
 }
