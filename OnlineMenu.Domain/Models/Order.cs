@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace OnlineMenu.Domain
+﻿namespace OnlineMenu.Domain.Models
 {
     public class Order
     {
         public int Id { get; set; }
-        public string Name { get; set; } // temporary, until we add products
+        public PaymentType PaymentType { get; set; }
         public Status Status { get; set; }
     }
 }
