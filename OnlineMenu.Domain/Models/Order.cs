@@ -6,5 +6,6 @@ namespace OnlineMenu.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; } // temporary, until we add products
+        public Status Status { get; set; }
     }
 }

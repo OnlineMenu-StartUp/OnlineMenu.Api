@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using OnlineMenu.Domain;
 
 namespace OnlineMenu.Application
@@ -13,9 +12,9 @@ namespace OnlineMenu.Application
             this.context = context;
         }
 
-        public Order GetOrder(int id)
+        public async Task<Order> GetOrder(int id)
         {
-            return context.Orders.First(o => o.Id == id);
+            return await context.Orders.FindAsync(id);
         }
     }
 }
