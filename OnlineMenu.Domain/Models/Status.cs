@@ -1,4 +1,4 @@
-namespace OnlineMenu.Domain
+namespace OnlineMenu.Domain.Models
 {
     public class Status
     {
