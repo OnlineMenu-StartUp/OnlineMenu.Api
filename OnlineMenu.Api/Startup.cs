@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Application;
+using OnlineMenu.Application.Services;
 using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api

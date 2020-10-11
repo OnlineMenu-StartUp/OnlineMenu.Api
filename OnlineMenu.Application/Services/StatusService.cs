@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using OnlineMenu.Domain;
 using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Domain.Models;
 
-namespace OnlineMenu.Application
+namespace OnlineMenu.Application.Services
 {
     public class StatusService
     {
