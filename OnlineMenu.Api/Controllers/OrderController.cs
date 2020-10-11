@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using OnlineMenu.Application;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Application.Services;
 
 namespace OnlineMenu.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public class OrderController : AppBaseController
     {
         private readonly OrderService orderService;
 

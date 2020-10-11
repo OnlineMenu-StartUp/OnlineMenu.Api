@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using OnlineMenu.Application;
+using Microsoft.IdentityModel.Tokens;
 using OnlineMenu.Application.Services;
-using OnlineMenu.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OnlineMenu.Application;
+using OnlineMenu.Domain.Exceptions;
+using static System.Text.Encoding;
 
 namespace OnlineMenu.Api
 {
@@ -34,13 +30,42 @@ namespace OnlineMenu.Api
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
 
-            
+
 
             services.ConfigureDbContext(Configuration.GetConnectionString("RemoteConnection"));
 
+            // We can store it in the database, I dont know what's better/safer
+            var jwtKey = Configuration.GetValue(typeof(string), "Secrets:JwtKey") as string;
+            if (jwtKey == null) throw new ConfigurationException("JWT Key was not set");
+
+            // configure jwt authentication
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(ASCII.GetBytes(jwtKey)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Roles.Admin, policy => policy.RequireClaim(ClaimTypes.Role, Roles.Admin));
+            });
+
             services.AddScoped<StatusService>();
             services.AddScoped<OrderService>();
-
+            services.AddScoped<AdminService>();
+            services.AddScoped<CustomerService>();
+            services.AddScoped<CookService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +76,7 @@ namespace OnlineMenu.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -60,6 +85,9 @@ namespace OnlineMenu.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

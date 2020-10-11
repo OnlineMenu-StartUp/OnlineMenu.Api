@@ -5,10 +5,11 @@ namespace OnlineMenu.Application
     /// Cook's account is created by the admin
     /// Admin has an account in db, and can create other admins
     /// </summary>
-    public enum Roles
+    /// Also, its a static class rather than an enum because [Authorize] requires a string
+    public static class Roles
     {
-        Customer, // Can make order and see his order
-        Cook, // Can see all orders in restaurant and complete order
-        Admin // Can see cooks, customers and orders, and edit the menu, (in future will edit the UI)
+        public const string Admin = "Admin"; // Can see cooks, customers and orders, and edit the menu(in future will edit the UI)
+        public const string Customer = "Customer"; // Can make order and see his order
+        public const string Cook = "Cook"; // Can see all orders in restaurant and complete order
     }
 }
