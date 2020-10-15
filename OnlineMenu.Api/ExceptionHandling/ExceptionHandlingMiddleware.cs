@@ -1,10 +1,7 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 
 namespace OnlineMenu.Api.ExceptionHandling

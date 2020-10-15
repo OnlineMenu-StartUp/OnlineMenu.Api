@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using OnlineMenu.Domain;
+﻿using System.Threading.Tasks;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Application
