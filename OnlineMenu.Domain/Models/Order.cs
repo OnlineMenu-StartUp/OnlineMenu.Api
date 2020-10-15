@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OnlineMenu.Domain
+﻿namespace OnlineMenu.Domain
 {
     public class Order
     {
