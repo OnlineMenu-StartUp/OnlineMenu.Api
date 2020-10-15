@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Application;
 using OnlineMenu.Application.Dto;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Api.Controllers
 {
