@@ -47,7 +47,7 @@ namespace OnlineMenu.Api
             }
 //          app.UseHttpsRedirection();
 
-            app.UseMiddleware<CustomExceptionMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>(env.IsDevelopment());
             
             app.UseRouting();
 
