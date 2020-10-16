@@ -24,9 +24,9 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
-            catch (BadValueException badValueException)
+            catch (ArgumentException argumentException)
             {
-                await HandleBadValueExceptionAsync(context, badValueException);
+                await HandleBadValueExceptionAsync(context, argumentException);
             }
             catch (Exception exceptionObj)
             {
@@ -34,7 +34,7 @@ namespace OnlineMenu.Api.ExceptionHandling
             }
         }
 
-        private static async Task HandleBadValueExceptionAsync(HttpContext context, BadValueException badValueException)
+        private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
@@ -42,10 +42,9 @@ namespace OnlineMenu.Api.ExceptionHandling
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var result = new ErrorDto(exception.Message);
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
             if (isDevelopment)
-                await context.Response.WriteAsync(SerializeObject(result));
+                await context.Response.WriteAsync(SerializeObject(new ErrorDto(exception.Message)));
             else
                 await context.Response.WriteAsync("Something went wrong, please try again in a few minutes");
         }

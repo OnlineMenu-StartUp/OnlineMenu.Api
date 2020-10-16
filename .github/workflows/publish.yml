@@ -30,6 +30,7 @@ jobs:
           git pull https://${{ secrets.git_hub_username }}:${{ secrets.git_hub_password }}@github.com/OnlineMenu-StartUp/OnlineMenu.Api.git && echo "Pulled new changes from github" && 
           cd OnlineMenu.Api && echo "Went to OnlineMenu.Api project" && 
           sed 's/"RemoteConnection": ""/"RemoteConnection": "${{ secrets.connection_string }}"/g' appsettings.json -i && echo "Changed the connection string" && 
+          sed 's/"JwtKey": ""/"JwtKey": "${{ secrets.jwt_key }}"/g' appsettings.json -i && echo "Changed the JWT key" && 
           dotnet publish --configuration Release && echo "Built the project" && 
           service online-menu-api restart && echo "Restarted project service" 
 
