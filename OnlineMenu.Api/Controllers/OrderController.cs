@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using OnlineMenu.Application.Services;
 
 namespace OnlineMenu.Api.Controllers
@@ -13,9 +14,9 @@ namespace OnlineMenu.Api.Controllers
         }
 
         [HttpGet("{orderId}")]
-        public ActionResult Get(int orderId)
+        public async Task<ActionResult> Get(int orderId)
         {
-            return Ok(orderService.GetOrder(orderId));
+            return Ok(await orderService.GetOrder(orderId));
         }
     }
 }

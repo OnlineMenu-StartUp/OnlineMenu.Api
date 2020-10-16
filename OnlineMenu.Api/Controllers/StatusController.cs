@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Application.Dto;
 using OnlineMenu.Application.Services;
@@ -10,29 +11,34 @@ namespace OnlineMenu.Api.Controllers
 {
     public class StatusController: AppBaseController
     {
-        private readonly IMapper _mapper;
-        private readonly StatusService _statusService;
+        private readonly IMapper mapper;
+        private readonly StatusService statusService;
 
         public StatusController(StatusService statusService, IMapper mapper)
         {
-            _statusService = statusService;
-            _mapper = mapper;
+            this.statusService = statusService;
+            this.mapper = mapper;
         }
         
         [HttpGet]
         public ActionResult<IEnumerable<StatusDto>> GetStatusList()
         {
-            var statuses = _statusService.GetStatuses();
-            var statusResList = statuses.Select(status => _mapper.Map<StatusDto>(status)).ToList();
+            var statuses = statusService.GetStatuses();
+            var statusResultList = statuses.Select(status => mapper.Map<StatusDto>(status)).ToList();
 
-            return Ok(statusResList);
+            return Ok(statusResultList);
         }
         
         [HttpPost]
-        public ActionResult<Status> CreateStatus(StatusDto status)
+        public ActionResult<StatusDto> CreateStatus(StatusDto status)
         {
-            var createdStatus = _statusService.CreateStatus(_mapper.Map<Status>(status));
-            return Ok(_mapper.Map<StatusDto>(createdStatus));
+            // The client shouldn't be able to provide an id. 
+            // It is not the case to create a new Request DTO for Status entity
+            status.Id = null;
+            
+            var createdStatus = statusService.CreateStatus(mapper.Map<Status>(status));
+            var createdStatusUrl = $"{Request.GetDisplayUrl()}/{createdStatus.Id}";
+            return Created(createdStatusUrl ,mapper.Map<StatusDto>(createdStatus));
         }
     }
 }

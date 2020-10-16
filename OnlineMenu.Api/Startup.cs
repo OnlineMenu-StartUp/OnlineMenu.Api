@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using OnlineMenu.Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OnlineMenu.Api.ExceptionHandling;
 using OnlineMenu.Application;
 using OnlineMenu.Domain.Exceptions;
 using static System.Text.Encoding;
@@ -26,11 +27,8 @@ namespace OnlineMenu.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Mappers
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-
-
 
             services.ConfigureDbContext(Configuration.GetConnectionString("RemoteConnection"));
 
@@ -75,9 +73,10 @@ namespace OnlineMenu.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            // app.UseHttpsRedirection();
-
+//          app.UseHttpsRedirection();
+            
+            app.UseMiddleware<ExceptionHandlingMiddleware>(env.IsDevelopment());
+            
             app.UseRouting();
 
             app.UseAuthorization();
@@ -85,9 +84,6 @@ namespace OnlineMenu.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

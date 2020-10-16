@@ -1,4 +1,5 @@
-﻿namespace OnlineMenu.Domain.Models
+
+namespace OnlineMenu.Domain.Models
 {
     public class Order
     {

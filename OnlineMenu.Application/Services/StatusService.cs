@@ -7,30 +7,31 @@ namespace OnlineMenu.Application.Services
 {
     public class StatusService
     {
-        private readonly IOnlineMenuContext _ctx;
+        private readonly IOnlineMenuContext context;
 
-        public StatusService(IOnlineMenuContext ctx)
+        public StatusService(IOnlineMenuContext context)
         {
-            _ctx = ctx;
+            this.context = context;
         }
         
         public IEnumerable<Status> GetStatuses()
         {
-            return _ctx.Statuses;
+            return context.Statuses;
         }
 
         public Status CreateStatus(Status status)
         {
-            var alreadyExists = _ctx.Statuses.Any(s => s.Name == status.Name);
+            var alreadyExists = context.Statuses.Any(s => s.Name == status.Name);
+            
             if (alreadyExists)
             {
                 throw new BadValueException($"The value [{status.Name}] already exists");
             }
             
-            _ctx.Statuses.Add(status); 
-            _ctx.SaveChanges();
+            var savedStatus = context.Statuses.Add(status); 
+            context.SaveChanges();
             
-            return status;
+            return savedStatus.Entity;
         }
     }
 }

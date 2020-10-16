@@ -4,7 +4,7 @@ namespace OnlineMenu.Domain.Exceptions
 {
     public class BadValueException: Exception
     {
-        public BadValueException(String msg) : base(msg)
+        public BadValueException(string message) : base(message)
         { }
     }
 }
