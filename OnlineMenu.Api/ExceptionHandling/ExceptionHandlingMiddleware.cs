@@ -2,7 +2,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using OnlineMenu.Domain.Exceptions;
+using static Newtonsoft.Json.JsonConvert;
 
 namespace OnlineMenu.Api.ExceptionHandling
 {
@@ -23,19 +24,30 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
+            catch (BadValueException badValueException)
+            {
+                await HandleBadValueExceptionAsync(context, badValueException);
+            }
             catch (Exception exceptionObj)
             {
                 await HandleExceptionAsync(context, exceptionObj);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleBadValueExceptionAsync(HttpContext context, BadValueException badValueException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
+        }
+
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var result = new ErrorDto(exception.Message);
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
             if (isDevelopment)
-                return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
-            return context.Response.WriteAsync(result.Message);
+                await context.Response.WriteAsync(SerializeObject(result));
+            else
+                await context.Response.WriteAsync("Something went wrong, please try again in a few minutes");
         }
     }
 }

@@ -8,8 +8,8 @@ namespace OnlineMenu.Api.ExceptionHandling
             Data = data;
         }
 
-        public string Message { get; private set; }
+        public string Message { get; }
 
-        public object Data { get; private set; }
+        public object Data { get; }
     }
 }
