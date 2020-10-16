@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Net;
+using System.Security.Authentication;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using OnlineMenu.Domain.Exceptions;
 using static Newtonsoft.Json.JsonConvert;
 
 namespace OnlineMenu.Api.ExceptionHandling
@@ -28,10 +30,23 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await HandleBadValueExceptionAsync(context, argumentException);
             }
+            catch (AuthenticationException authenticationException)
+            {
+                await AuthenticationExceptionHandler(context, authenticationException);
+            }
             catch (Exception exceptionObj)
             {
                 await HandleExceptionAsync(context, exceptionObj);
             }
+        }
+
+        private async Task AuthenticationExceptionHandler(HttpContext context, AuthenticationException authenticationException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var message = string.IsNullOrEmpty(authenticationException.Message)
+                ? "Incorrect user name or password"
+                : authenticationException.Message;
+            await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
         }
 
         private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)
@@ -44,7 +59,7 @@ namespace OnlineMenu.Api.ExceptionHandling
         {
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
             if (isDevelopment)
-                await context.Response.WriteAsync(SerializeObject(new ErrorDto(exception.Message)));
+                await context.Response.WriteAsync(exception.ToString());
             else
                 await context.Response.WriteAsync("Something went wrong, please try again in a few minutes");
         }

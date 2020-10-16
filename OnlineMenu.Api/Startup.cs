@@ -47,6 +47,7 @@ namespace OnlineMenu.Api
             services.AddScoped<AdminService>();
             services.AddScoped<CustomerService>();
             services.AddScoped<CookService>();
+            services.AddScoped<AuthenticationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
