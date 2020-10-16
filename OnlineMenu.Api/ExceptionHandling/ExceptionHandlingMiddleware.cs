@@ -9,13 +9,15 @@ namespace OnlineMenu.Api.ExceptionHandling
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate next;
+        private readonly bool isDevelopment;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(RequestDelegate next, bool isDevelopment)
         {
             this.next = next;
+            this.isDevelopment = isDevelopment;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -35,6 +37,5 @@ namespace OnlineMenu.Api.ExceptionHandling
                 return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
             return context.Response.WriteAsync(result.Message);
         }
-
     }
 }

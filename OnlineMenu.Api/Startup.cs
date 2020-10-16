@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OnlineMenu.Api.ExceptionHandling;
 using OnlineMenu.Application;
 
 namespace OnlineMenu.Api
@@ -22,8 +23,6 @@ namespace OnlineMenu.Api
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
-
-            
 
             services.ConfigureDbContext(Configuration.GetConnectionString("RemoteConnection"));
 
