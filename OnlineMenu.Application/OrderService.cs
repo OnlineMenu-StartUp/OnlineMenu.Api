@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using OnlineMenu.Domain;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Application

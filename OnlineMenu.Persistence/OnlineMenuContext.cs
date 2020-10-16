@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Application;
-using OnlineMenu.Domain;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Persistence
