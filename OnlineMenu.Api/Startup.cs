@@ -34,14 +34,8 @@ namespace OnlineMenu.Api
             services.Configure<AppSettings>(appSettingsSection);
 
             var jwtKey = appSettingsSection.Get<AppSettings>().Secrets.JwtKey;
-
             services.ConfigureAuthentication(jwtKey);
-            
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(Roles.Admin, policy => policy.RequireClaim(ClaimTypes.Role, Roles.Admin));
-            });
-            
+
             services.AddScoped<StatusService>();
             services.AddScoped<OrderService>();
             services.AddScoped<AdminService>();
