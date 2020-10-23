@@ -3,7 +3,7 @@ using System.Linq;
 using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Domain.Models;
 
-namespace OnlineMenu.Application
+namespace OnlineMenu.Application.Services
 {
     public class StatusService
     {

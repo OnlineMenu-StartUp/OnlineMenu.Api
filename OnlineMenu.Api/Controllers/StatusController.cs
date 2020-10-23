@@ -3,15 +3,13 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using OnlineMenu.Application;
 using OnlineMenu.Application.Dto;
+using OnlineMenu.Application.Services;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class StatusController: ControllerBase
+    public class StatusController: AppBaseController
     {
         private readonly IMapper mapper;
         private readonly StatusService statusService;

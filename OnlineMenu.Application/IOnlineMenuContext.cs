@@ -14,6 +14,9 @@ namespace OnlineMenu.Application
         DbSet<ProductExtra> ProductExtras { get; set; }
         DbSet<ProductProductExtra> ProductProductExtras { get; set; }
         DbSet<Status> Statuses { get; set; }
+        DbSet<Admin> Admins { get; set; }
+        DbSet<Cook> Cooks { get; set; }
+        DbSet<Customer> Customers { get; set; }
         int SaveChanges();
     }
 }

@@ -18,6 +18,9 @@ namespace OnlineMenu.Persistence
         public DbSet<ProductExtra> ProductExtras { get; set; }
         public DbSet<ProductProductExtra> ProductProductExtras { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Cook> Cooks { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
