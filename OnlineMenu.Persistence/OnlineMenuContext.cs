@@ -40,6 +40,10 @@ namespace OnlineMenu.Persistence
                 .HasOne<ProductExtra>(ppe => ppe.ProductExtra)
                 .WithMany(pe => pe.ProductProductExtras)
                 .HasForeignKey(ppe => ppe.ProductExtraId);
+            
+            builder.Entity<Category>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
         }
     }
 }
