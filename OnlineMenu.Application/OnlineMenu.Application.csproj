@@ -8,6 +8,7 @@
     <ProjectReference Include="..\OnlineMenu.Domain\OnlineMenu.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.3.0-preview3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
   </ItemGroup>
 </Project>

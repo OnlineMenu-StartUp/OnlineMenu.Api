@@ -4,6 +4,8 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using static Newtonsoft.Json.JsonConvert;
+using FluentValidation;
+using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Api.ExceptionHandling
 {
@@ -24,9 +26,9 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
-            catch (ArgumentException argumentException)
+            catch (BadValueException argumentException)
             {
-                await HandleArgumentExceptionAsync(context, argumentException);
+                await HandleBadValueExceptionAsync(context, argumentException);
             }
             catch (AuthenticationException authenticationException)
             {
@@ -38,6 +40,12 @@ namespace OnlineMenu.Api.ExceptionHandling
             }
         }
 
+        private static async Task HandleBadValueExceptionAsync(HttpContext context, BadValueException badValueException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
+        }
+
         private async Task HandleAuthenticationException(HttpContext context, AuthenticationException authenticationException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -45,12 +53,6 @@ namespace OnlineMenu.Api.ExceptionHandling
                 ? "Incorrect user name or password"
                 : authenticationException.Message;
             await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
-        }
-
-        private static async Task HandleArgumentExceptionAsync(HttpContext context, ArgumentException argumentException)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(argumentException.Message, argumentException.ParamName)));
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)

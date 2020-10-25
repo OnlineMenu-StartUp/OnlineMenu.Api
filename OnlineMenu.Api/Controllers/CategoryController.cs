@@ -26,22 +26,22 @@ namespace OnlineMenu.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Read()
+        public async Task<IActionResult> Read()
         {
-            return Ok(categoryService.GetAllCategories());
+            return Ok(await categoryService.GetAllCategories());
         }
         
         [HttpPut]
-        public IActionResult Update([FromBody] Category category)
+        public async Task<IActionResult> Update([FromBody] Category category)
         {
-            categoryService.UpdateCategory(category);
+            await categoryService.UpdateCategory(category);
             return Ok(category);
         }
         
         [HttpDelete]
-        public IActionResult Delete([FromBody] Category category)
+        public async Task<IActionResult> Delete([FromBody] Category category)
         {
-            categoryService.DeleteCategory(category);
+            await categoryService.DeleteCategory(category);
             return Ok();
         }
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Application
@@ -18,5 +20,6 @@ namespace OnlineMenu.Application
         DbSet<Cook> Cooks { get; set; }
         DbSet<Customer> Customers { get; set; }
         int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
