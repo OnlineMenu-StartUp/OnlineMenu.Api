@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineMenu.Application;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Application.ViewModel;
 

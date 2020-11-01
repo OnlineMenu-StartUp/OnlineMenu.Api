@@ -1,11 +1,11 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Security.Authentication;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using static Newtonsoft.Json.JsonConvert;
+using FluentValidation;
+using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Api.ExceptionHandling
 {
@@ -26,13 +26,13 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
-            catch (ArgumentException argumentException)
+            catch (BadValueException argumentException)
             {
                 await HandleBadValueExceptionAsync(context, argumentException);
             }
             catch (AuthenticationException authenticationException)
             {
-                await AuthenticationExceptionHandler(context, authenticationException);
+                await HandleAuthenticationException(context, authenticationException);
             }
             catch (Exception exceptionObj)
             {
@@ -40,19 +40,19 @@ namespace OnlineMenu.Api.ExceptionHandling
             }
         }
 
-        private async Task AuthenticationExceptionHandler(HttpContext context, AuthenticationException authenticationException)
+        private static async Task HandleBadValueExceptionAsync(HttpContext context, BadValueException badValueException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
+        }
+
+        private async Task HandleAuthenticationException(HttpContext context, AuthenticationException authenticationException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             var message = string.IsNullOrEmpty(authenticationException.Message)
                 ? "Incorrect user name or password"
                 : authenticationException.Message;
             await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
-        }
-
-        private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
