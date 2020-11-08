@@ -1,4 +1,4 @@
-namespace OnlineMenu.Application.ViewModel
+namespace OnlineMenu.Api.ViewModel.Authentication
 {
     public class RegisterModel
     {

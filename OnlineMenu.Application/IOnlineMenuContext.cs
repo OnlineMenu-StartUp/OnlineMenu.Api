@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Application
@@ -11,12 +13,13 @@ namespace OnlineMenu.Application
         DbSet<OrderedProductExtra> OrderedProductExtras { get; set; }
         DbSet<PaymentType> PaymentTypes { get; set; }
         DbSet<Product> Products { get; set; }
-        DbSet<ProductExtra> ProductExtras { get; set; }
-        DbSet<ProductProductExtra> ProductProductExtras { get; set; }
+        DbSet<Topping> Toppings { get; set; }
+        DbSet<ProductTopping> ProductToppings { get; set; }
         DbSet<Status> Statuses { get; set; }
         DbSet<Admin> Admins { get; set; }
         DbSet<Cook> Cooks { get; set; }
         DbSet<Customer> Customers { get; set; }
         int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

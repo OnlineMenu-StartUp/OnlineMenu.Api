@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,8 @@ using Microsoft.Extensions.Hosting;
 using OnlineMenu.Api.ConfigurationExtensions;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Api.ExceptionHandling;
-using OnlineMenu.Application;
+using OnlineMenu.Domain;
+using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api
 {
@@ -38,6 +38,9 @@ namespace OnlineMenu.Api
 
             services.AddScoped<StatusService>();
             services.AddScoped<OrderService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<ProductService>();
+            
             services.AddScoped<AdminService>();
             services.AddScoped<CustomerService>();
             services.AddScoped<CookService>();
@@ -56,7 +59,8 @@ namespace OnlineMenu.Api
             app.UseMiddleware<ExceptionHandlingMiddleware>(env.IsDevelopment());
             
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

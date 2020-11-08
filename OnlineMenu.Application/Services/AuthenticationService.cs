@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OnlineMenu.Api;
+using OnlineMenu.Domain;
 using static System.DateTime;
 using static System.Text.Encoding;
 

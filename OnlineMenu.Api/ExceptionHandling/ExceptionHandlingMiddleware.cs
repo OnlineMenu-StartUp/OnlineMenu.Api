@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using static Newtonsoft.Json.JsonConvert;
+using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Api.ExceptionHandling
 {

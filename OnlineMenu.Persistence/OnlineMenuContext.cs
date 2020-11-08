@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿﻿using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Application;
 using OnlineMenu.Domain.Models;
 
@@ -15,8 +15,8 @@ namespace OnlineMenu.Persistence
         public DbSet<OrderedProductExtra> OrderedProductExtras { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductExtra> ProductExtras { get; set; }
-        public DbSet<ProductProductExtra> ProductProductExtras { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
+        public DbSet<ProductTopping> ProductToppings { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Cook> Cooks { get; set; }
@@ -28,18 +28,18 @@ namespace OnlineMenu.Persistence
                 .HasIndex(s => s.Name)
                 .IsUnique();
             
-            builder.Entity<ProductProductExtra>()
-                .HasKey(ppe => new { ppe.ProductId, ppe.ProductExtraId });
+            builder.Entity<ProductTopping>()
+                .HasKey(ppe => new { ppe.ProductId, ppe.ToppingId });
             
-            builder.Entity<ProductProductExtra>()
+            builder.Entity<ProductTopping>()
                 .HasOne<Product>(ppe => ppe.Product)
-                .WithMany(p => p.ProductProductExtras)
+                .WithMany(p => p.ToppingLinks)
                 .HasForeignKey(ppe => ppe.ProductId);
 
-            builder.Entity<ProductProductExtra>()
-                .HasOne<ProductExtra>(ppe => ppe.ProductExtra)
-                .WithMany(pe => pe.ProductProductExtras)
-                .HasForeignKey(ppe => ppe.ProductExtraId);
+            builder.Entity<ProductTopping>()
+                .HasOne<Topping>(ppe => ppe.Topping)
+                .WithMany(pe => pe.ProductLink)
+                .HasForeignKey(ppe => ppe.ToppingId);
         }
     }
 }

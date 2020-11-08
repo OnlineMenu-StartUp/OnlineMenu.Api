@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,5 +10,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ViewModel\AuthenticateRequestModel.cs" />
+    <Compile Remove="ViewModel\AuthenticateResponseModel.cs" />
   </ItemGroup>
 </Project>
