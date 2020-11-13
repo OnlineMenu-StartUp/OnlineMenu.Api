@@ -27,6 +27,10 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
+            catch (ValueNotFoundException valueNotFoundException)
+            {
+                await HandleValueNotFoundException(context, valueNotFoundException);
+            }
             catch (ArgumentException argumentException)
             {
                 await HandleBadValueExceptionAsync(context, argumentException);
@@ -39,6 +43,15 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await HandleExceptionAsync(context, exceptionObj);
             }
+        }
+
+        private async Task HandleValueNotFoundException(HttpContext context, ValueNotFoundException valueNotFoundException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var message = string.IsNullOrEmpty(valueNotFoundException.Message)
+                 ? "Item was not found"
+                : valueNotFoundException.Message;
+            await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
         }
 
         private async Task AuthenticationExceptionHandler(HttpContext context, AuthenticationException authenticationException)
@@ -58,7 +71,7 @@ namespace OnlineMenu.Api.ExceptionHandling
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             if (isDevelopment)
                 await context.Response.WriteAsync(exception.ToString());
             else

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Api.ViewModel.Product;
 using OnlineMenu.Application;
@@ -26,34 +27,34 @@ namespace OnlineMenu.Api.Controllers
         public async Task<ActionResult<IEnumerable<ProductResponseModel>>> GetMenu()
         {
             return Ok(
-                (await productService.GetAllProducts()).Select(p => mapper.Map<Product, ProductResponseModel>(p)));
+                (await productService.GetAllProductsAsync()).Select(p => mapper.Map<Product, ProductResponseModel>(p)));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductResponseModel>> GetProduct([FromRoute] int id)
         {
-            return Ok(mapper.Map<ProductResponseModel>(await productService.GetProductById(id)));
+            return Ok(mapper.Map<ProductResponseModel>(await productService.GetProductByIdAsync(id)));
         }
 
         [HttpGet("by-category/{categoryName}")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory([FromRoute] string categoryName)
         {
-            return Ok(await productService.GetProductsByCategoryName(categoryName));
+            return Ok(await productService.GetProductsByCategoryNameAsync(categoryName));
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ProductRequestModel productRequest)
+        public async Task<IActionResult> Create([FromBody] ProductCreateModel productCreate)
         {
-            await productService.CreateProduct(mapper.Map<Product>(productRequest));
-            return Created("", productRequest);
+            var prodId = await productService.CreateProductAsync(mapper.Map<Product>(productCreate));
+            return Created($"{Request.GetDisplayUrl()}/{prodId}", productCreate);
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductUpdateModel product)
         {
-            await productService.UpdateProduct(id, mapper.Map<Product>(product));
+            await productService.UpdateProductAsync(id, mapper.Map<Product>(product));
             return Ok();
         }
 
@@ -61,7 +62,7 @@ namespace OnlineMenu.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await productService.DeleteProduct(id);
+            await productService.DeleteProductAsync(id);
             return Ok();
         }
     }

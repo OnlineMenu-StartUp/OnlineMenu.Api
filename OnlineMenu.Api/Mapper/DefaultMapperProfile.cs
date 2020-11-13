@@ -18,7 +18,7 @@ namespace OnlineMenu.Api.Mapper
             CreateMap<Topping, ToppingShallowResponseModel>();
             CreateMap<ProductUpdateModel, Product>();
             
-            CreateMap<ProductRequestModel, Product>()
+            CreateMap<ProductCreateModel, Product>()
                 .ForMember(p => p.ToppingLinks, 
                     opt => opt.MapFrom<ConvertToProductExtras, ICollection<ToppingShallowRequestModel>>(src => src.Toppings));
             
@@ -28,11 +28,11 @@ namespace OnlineMenu.Api.Mapper
             
         }
     }
-    public class ConvertToProductExtras : IMemberValueResolver<ProductRequestModel, Product, ICollection<ToppingShallowRequestModel>, ICollection<ProductTopping>?>
+    public class ConvertToProductExtras : IMemberValueResolver<ProductCreateModel, Product, ICollection<ToppingShallowRequestModel>, ICollection<ProductTopping>?>
     {
 
         public ICollection<ProductTopping>? Resolve(
-            ProductRequestModel source, 
+            ProductCreateModel source, 
             Product destination, 
             ICollection<ToppingShallowRequestModel> sourceMember, 
             ICollection<ProductTopping>? destMember,

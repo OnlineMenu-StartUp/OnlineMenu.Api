@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Application.Services
@@ -16,7 +17,7 @@ namespace OnlineMenu.Application.Services
             this.context = context;
         }
 
-        public async Task<List<Product>> GetAllProducts()
+        public async Task<List<Product>> GetAllProductsAsync()
         {
             return await context.Products
                 .Include(p => p.ToppingLinks)
@@ -24,33 +25,49 @@ namespace OnlineMenu.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await context.Products.Where(p => p.Id == id)
-                .Include(p => p.ToppingLinks)
-                .ThenInclude(pe => pe.Topping).FirstAsync();
+            try
+            {
+                return await context.Products
+                    .Include(p => p.ToppingLinks)
+                    .ThenInclude(pe => pe.Topping)
+                    .FirstAsync(p => p.Id == id);
+            }
+            catch (InvalidOperationException _)
+            {
+                throw new ValueNotFoundException($"Product with id = {id} was not found");
+            }
         }
         
-        public async Task<List<Product>> GetProductsByCategoryName(string categoryName)
+        public async Task<List<Product>> GetProductsByCategoryNameAsync(string categoryName)
         {
-            return await context.Products.Where(p =>
-                    p.Category != null &&
-                    string.Equals(p.Category.Name, categoryName, StringComparison.InvariantCultureIgnoreCase))
-                .Include(p => p.ToppingLinks)
-                .ThenInclude(pe => pe.Topping)
-                .ToListAsync();
+            try
+            {
+                return await context.Products.Where(p =>
+                        p.Category != null &&
+                        string.Equals(p.Category.Name, categoryName, StringComparison.InvariantCultureIgnoreCase))
+                    .Include(p => p.ToppingLinks)
+                    .ThenInclude(pe => pe.Topping)
+                    .ToListAsync();
+            }
+            catch (InvalidOperationException _)
+            {
+                throw new ValueNotFoundException($"Product with category name = {categoryName} was not found");
+            }
         }
 
-        public async Task CreateProduct(Product product)
+        public async Task<int> CreateProductAsync(Product product)
         {
             // TODO: product validation
 
             // ReSharper disable once MethodHasAsyncOverload
             context.Products.Add(product);
             await context.SaveChangesAsync();
+            return product.Id;
         }
 
-        public async Task UpdateProduct(int id, Product product)
+        public async Task UpdateProductAsync(int id, Product product)
         {
             // TODO: validation
             
@@ -66,7 +83,7 @@ namespace OnlineMenu.Application.Services
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteProduct(int productId)
+        public async Task DeleteProductAsync(int productId)
         {
             var product = await context.Products.FindAsync(productId);
             context.Products.Remove(product);

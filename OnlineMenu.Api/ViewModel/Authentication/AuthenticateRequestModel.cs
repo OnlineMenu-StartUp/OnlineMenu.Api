@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace OnlineMenu.Api.ViewModel.Authentication
 {
     public class AuthenticateRequestModel
