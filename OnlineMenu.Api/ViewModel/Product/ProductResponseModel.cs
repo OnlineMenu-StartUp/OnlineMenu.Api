@@ -13,7 +13,7 @@ namespace OnlineMenu.Api.ViewModel.Product
         
         public decimal Price { get; set; }
         
-        public string? Category { get; set; }
+        public string? CategoryName { get; set; }
 
         public ICollection<ToppingShallowResponseModel> Toppings { get; set; } = new List<ToppingShallowResponseModel>();
     }

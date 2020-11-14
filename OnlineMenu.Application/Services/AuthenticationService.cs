@@ -25,7 +25,7 @@ namespace OnlineMenu.Application.Services
             var key = ASCII.GetBytes(jwtKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, claim),
                     new Claim(ClaimTypes.Role, role)

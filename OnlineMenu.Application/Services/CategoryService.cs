@@ -16,12 +16,14 @@ namespace OnlineMenu.Application.Services
             this.context = context;
         }
 
-        public async Task CreateCategory(string categoryName)
+        public async Task<Category> CreateCategory(string categoryName)
         {
-            ValidateName(categoryName);
+            var category = new Category {Name = categoryName};
             // ReSharper disable once MethodHasAsyncOverload https://stackoverflow.com/questions/42034282/are-there-dbset-updateasync-and-removeasync-in-net-core/42042173
-            context.Categories.Add(new Category {Name = categoryName});
+            context.Categories.Add(category);
             await context.SaveChangesAsync();
+            
+            return category;
         }
 
         public async Task<List<Category>> GetAllCategories()
@@ -29,23 +31,22 @@ namespace OnlineMenu.Application.Services
             return await context.Categories.ToListAsync();
         }
 
-        public async Task UpdateCategory(Category category)
+        public async Task<Category> UpdateCategory(int categoryId, string categoryName)
         {
-            ValidateName(category.Name);
+            var category = new Category{Id= categoryId, Name = categoryName};
             context.Categories.Update(category);
             await context.SaveChangesAsync();
+
+            return category;
         }
 
-        public async Task DeleteCategory(Category category)
+        public async Task<Category> DeleteCategory(int categoryId)
         {
+            var category = await context.Categories.FindAsync(categoryId);
             context.Categories.Remove(category);
             await context.SaveChangesAsync();
-        }
-
-        private static void ValidateName(string categoryName)
-        {
-            if (string.IsNullOrWhiteSpace(categoryName) && categoryName!.Length > 30)
-                throw new BadValueException("Category Name shouldn't be null or empty");
+            
+            return category;
         }
     }
 }

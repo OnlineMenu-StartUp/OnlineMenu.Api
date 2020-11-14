@@ -51,7 +51,7 @@ namespace OnlineMenu.Api.ExceptionHandling
             var message = string.IsNullOrEmpty(valueNotFoundException.Message)
                  ? "Item was not found"
                 : valueNotFoundException.Message;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
+            await context.Response.WriteAsync(message);
         }
 
         private async Task AuthenticationExceptionHandler(HttpContext context, AuthenticationException authenticationException)
@@ -60,13 +60,17 @@ namespace OnlineMenu.Api.ExceptionHandling
             var message = string.IsNullOrEmpty(authenticationException.Message)
                 ? "Incorrect user name or password"
                 : authenticationException.Message;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
+            if (isDevelopment)
+                await context.Response.WriteAsync(authenticationException.ToString());
+            else
+                await context.Response.WriteAsync(message);
+            // await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
         }
 
         private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
+            await context.Response.WriteAsync(badValueException.Message);
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)

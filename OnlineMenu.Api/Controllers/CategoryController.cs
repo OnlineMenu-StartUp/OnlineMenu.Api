@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Application;
 using OnlineMenu.Application.Services;
@@ -16,12 +17,12 @@ namespace OnlineMenu.Api.Controllers
         {
             this.categoryService = categoryService;
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] string categoryName)
+        public async Task<IActionResult> Create([FromBody] string name)
         {
-            await categoryService.CreateCategory(categoryName);
-            return Created("", categoryName);
+            var category = await categoryService.CreateCategory(name);
+            return Created($"{Request.GetDisplayUrl()}/{category.Id}", category);
         }
 
         [AllowAnonymous]
@@ -30,19 +31,19 @@ namespace OnlineMenu.Api.Controllers
         {
             return Ok(await categoryService.GetAllCategories());
         }
-        
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Category category)
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] string categoryName)
         {
-            await categoryService.UpdateCategory(category);
+            var category = await categoryService.UpdateCategory(id, categoryName);
             return Ok(category);
         }
         
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Category category)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await categoryService.DeleteCategory(category);
-            return Ok();
+            var category = await categoryService.DeleteCategory(id);
+            return Ok(category);
         }
     }
 }

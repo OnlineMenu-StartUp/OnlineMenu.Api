@@ -46,24 +46,24 @@ namespace OnlineMenu.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductCreateModel productCreate)
         {
-            var prodId = await productService.CreateProductAsync(mapper.Map<Product>(productCreate));
-            return Created($"{Request.GetDisplayUrl()}/{prodId}", productCreate);
+            var product = await productService.CreateProductAsync(mapper.Map<Product>(productCreate));
+            return Created($"{Request.GetDisplayUrl()}/{product.Id}", mapper.Map<ProductResponseModel>(product));
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductUpdateModel product)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductUpdateModel productUpdate)
         {
-            await productService.UpdateProductAsync(id, mapper.Map<Product>(product));
-            return Ok();
+            var product = await productService.UpdateProductAsync(id, mapper.Map<Product>(productUpdate));
+            return Ok(mapper.Map<ProductResponseModel>(product));
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await productService.DeleteProductAsync(id);
-            return Ok();
+            var product = await productService.DeleteProductAsync(id);
+            return Ok(product);
         }
     }
 }

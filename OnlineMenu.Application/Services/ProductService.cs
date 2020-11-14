@@ -20,8 +20,9 @@ namespace OnlineMenu.Application.Services
         public async Task<List<Product>> GetAllProductsAsync()
         {
             return await context.Products
+                .Include(p => p.Category)
                 .Include(p => p.ToppingLinks)
-                .ThenInclude(pe => pe.Topping)
+                .ThenInclude(pt => pt.Topping)
                 .ToListAsync();
         }
 
@@ -30,8 +31,9 @@ namespace OnlineMenu.Application.Services
             try
             {
                 return await context.Products
+                    .Include(p => p.Category)
                     .Include(p => p.ToppingLinks)
-                    .ThenInclude(pe => pe.Topping)
+                    .ThenInclude(pt => pt.Topping)
                     .FirstAsync(p => p.Id == id);
             }
             catch (InvalidOperationException _)
@@ -47,6 +49,7 @@ namespace OnlineMenu.Application.Services
                 return await context.Products.Where(p =>
                         p.Category != null &&
                         string.Equals(p.Category.Name, categoryName, StringComparison.InvariantCultureIgnoreCase))
+                    .Include(p => p.Category)
                     .Include(p => p.ToppingLinks)
                     .ThenInclude(pe => pe.Topping)
                     .ToListAsync();
@@ -57,37 +60,31 @@ namespace OnlineMenu.Application.Services
             }
         }
 
-        public async Task<int> CreateProductAsync(Product product)
+        public async Task<Product> CreateProductAsync(Product product)
         {
-            // TODO: product validation
-
             // ReSharper disable once MethodHasAsyncOverload
             context.Products.Add(product);
             await context.SaveChangesAsync();
-            return product.Id;
+            return product;
         }
 
-        public async Task UpdateProductAsync(int id, Product product)
+        public async Task<Product> UpdateProductAsync(int id, Product product)
         {
             // TODO: validation
             
             product.Id = id;
             context.Products.Update(product);
-            // var productFromDb = await context.Products.FindAsync(id);
-            //
-            // var productProductExtrasFromDb = context.ProductToppings.Where(ppe => ppe.ProductId == id);
-            // context.ProductToppings.RemoveRange(productProductExtrasFromDb);
-            // context.Toppings.AddRange(product.ToppingLinks.Select(ppe => ppe.Topping));
-            // context.ProductToppings.AddRange(product.ToppingLinks ?? throw new Exception());
 
             await context.SaveChangesAsync();
+            return product;
         }
 
-        public async Task DeleteProductAsync(int productId)
+        public async Task<Product> DeleteProductAsync(int productId)
         {
             var product = await context.Products.FindAsync(productId);
             context.Products.Remove(product);
             await context.SaveChangesAsync();
+            return product;
         }
     }
 }

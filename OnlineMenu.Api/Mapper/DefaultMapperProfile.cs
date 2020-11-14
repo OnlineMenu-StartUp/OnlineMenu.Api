@@ -5,6 +5,7 @@ using OnlineMenu.Api.ViewModel.Product;
 using OnlineMenu.Api.ViewModel.ProductExtra;
 using OnlineMenu.Application.Dto;
 using OnlineMenu.Domain.Models;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace OnlineMenu.Api.Mapper
 {
@@ -16,19 +17,52 @@ namespace OnlineMenu.Api.Mapper
 
             CreateMap<ToppingShallowRequestModel, Topping>();
             CreateMap<Topping, ToppingShallowResponseModel>();
-            CreateMap<ProductUpdateModel, Product>();
+            
+            CreateMap<ProductUpdateModel, Product>()
+                .ForMember(p => p.ToppingLinks,
+                    opt => opt.MapFrom<ToppingIdsToToppingLinks, ICollection<int>?>(src => src.ToppingIds));
             
             CreateMap<ProductCreateModel, Product>()
                 .ForMember(p => p.ToppingLinks, 
-                    opt => opt.MapFrom<ConvertToProductExtras, ICollection<ToppingShallowRequestModel>>(src => src.Toppings));
+                    opt => opt.MapFrom<ToppingsToToppingLinks, ICollection<ToppingShallowRequestModel>>(src => src.Toppings));
             
             CreateMap<Product, ProductResponseModel>()
                 .ForMember(pr => pr.Toppings,
-                    opt => opt.MapFrom<ConvertFromProductExtra, ICollection<ProductTopping>?>(src => src.ToppingLinks));
+                    opt => opt.MapFrom<ToppingLinksToToppings, ICollection<ProductTopping>?>(src => src.ToppingLinks))
+                .ForMember(pr => pr.CategoryName,
+                opt => opt.MapFrom<CategoryToCategoryName, Category?>(src => src.Category));
             
         }
     }
-    public class ConvertToProductExtras : IMemberValueResolver<ProductCreateModel, Product, ICollection<ToppingShallowRequestModel>, ICollection<ProductTopping>?>
+
+    public class CategoryToCategoryName : IMemberValueResolver<Product, ProductResponseModel, Category?, string?>
+    {
+        public string? Resolve(
+            Product source, 
+            ProductResponseModel destination,
+            Category? sourceMember,
+            string? destMember,
+            ResolutionContext context)
+        {
+            return source.Category?.Name;
+        }
+    }
+
+    public class ToppingIdsToToppingLinks: IMemberValueResolver<ProductUpdateModel, Product, ICollection<int>?, ICollection<ProductTopping>?>
+    {
+        public ICollection<ProductTopping>? Resolve(
+            ProductUpdateModel source,
+            Product destination,
+            ICollection<int>? sourceMember,
+            ICollection<ProductTopping>? destMember,
+            ResolutionContext context)
+        {
+            return (source.ToppingIds ?? new List<int>())
+                .Select(toppingId => new ProductTopping {Product = destination, ToppingId = toppingId}).ToList();
+        }
+    }
+
+    public class ToppingsToToppingLinks : IMemberValueResolver<ProductCreateModel, Product, ICollection<ToppingShallowRequestModel>, ICollection<ProductTopping>?>
     {
 
         public ICollection<ProductTopping>? Resolve(
@@ -39,16 +73,16 @@ namespace OnlineMenu.Api.Mapper
             ResolutionContext context)
         {
             List<Topping> productExtras =
-                source.Toppings.Select(pesr => context.Mapper.Map<Topping>(pesr)).ToList();
+                source.Toppings.Select(shallowRequestModel => context.Mapper.Map<Topping>(shallowRequestModel)).ToList();
 
             List<ProductTopping> productProductExtras =
-                productExtras.Select(pe => new ProductTopping{Topping = pe, ProductId = destination.Id}).ToList();
+                productExtras.Select(topping => new ProductTopping{Topping = topping, ProductId = destination.Id}).ToList();
 
             return productProductExtras;
         }
     }
     
-    public class ConvertFromProductExtra : IMemberValueResolver<Product, ProductResponseModel, ICollection<ProductTopping>?, ICollection<ToppingShallowResponseModel>>
+    public class ToppingLinksToToppings : IMemberValueResolver<Product, ProductResponseModel, ICollection<ProductTopping>?, ICollection<ToppingShallowResponseModel>>
     {
         public ICollection<ToppingShallowResponseModel> Resolve(
             Product source, 
@@ -57,12 +91,12 @@ namespace OnlineMenu.Api.Mapper
             ICollection<ToppingShallowResponseModel> destMember,
             ResolutionContext context)
         {
-            List<Topping> productExtras = (source.ToppingLinks ?? new List<ProductTopping>()).Select(ppe => ppe.Topping).ToList();
+            List<Topping> toppings = (source.ToppingLinks ?? new List<ProductTopping>()).Select(productTopping => productTopping.Topping).ToList();
 
-            List<ToppingShallowResponseModel> shallowProductExtras = 
-                productExtras.Select(pe => context.Mapper.Map<ToppingShallowResponseModel>(pe)).ToList();
+            List<ToppingShallowResponseModel> shallowToppings = 
+                toppings.Select(topping => context.Mapper.Map<ToppingShallowResponseModel>(topping)).ToList();
             
-            return shallowProductExtras;
+            return shallowToppings;
         }
     }
 }
