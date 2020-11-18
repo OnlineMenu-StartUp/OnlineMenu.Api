@@ -1,4 +1,6 @@
-namespace OnlineMenu.Application.ViewModel
+using System.ComponentModel.DataAnnotations;
+
+namespace OnlineMenu.Api.ViewModel.Authentication
 {
     public class AuthenticateRequestModel
     {

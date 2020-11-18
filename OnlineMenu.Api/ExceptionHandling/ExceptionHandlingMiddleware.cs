@@ -1,10 +1,11 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Security.Authentication;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using static Newtonsoft.Json.JsonConvert;
-using FluentValidation;
 using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Api.ExceptionHandling
@@ -26,13 +27,17 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
-            catch (BadValueException argumentException)
+            catch (ValueNotFoundException valueNotFoundException)
+            {
+                await HandleValueNotFoundException(context, valueNotFoundException);
+            }
+            catch (ArgumentException argumentException)
             {
                 await HandleBadValueExceptionAsync(context, argumentException);
             }
             catch (AuthenticationException authenticationException)
             {
-                await HandleAuthenticationException(context, authenticationException);
+                await AuthenticationExceptionHandler(context, authenticationException);
             }
             catch (Exception exceptionObj)
             {
@@ -40,24 +45,37 @@ namespace OnlineMenu.Api.ExceptionHandling
             }
         }
 
-        private static async Task HandleBadValueExceptionAsync(HttpContext context, BadValueException badValueException)
+        private async Task HandleValueNotFoundException(HttpContext context, ValueNotFoundException valueNotFoundException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(badValueException.Message)));
+            var message = string.IsNullOrEmpty(valueNotFoundException.Message)
+                 ? "Item was not found"
+                : valueNotFoundException.Message;
+            await context.Response.WriteAsync(message);
         }
 
-        private async Task HandleAuthenticationException(HttpContext context, AuthenticationException authenticationException)
+        private async Task AuthenticationExceptionHandler(HttpContext context, AuthenticationException authenticationException)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             var message = string.IsNullOrEmpty(authenticationException.Message)
                 ? "Incorrect user name or password"
                 : authenticationException.Message;
-            await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
+            if (isDevelopment)
+                await context.Response.WriteAsync(authenticationException.ToString());
+            else
+                await context.Response.WriteAsync(message);
+            // await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
+        }
+
+        private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsync(badValueException.Message);
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             if (isDevelopment)
                 await context.Response.WriteAsync(exception.ToString());
             else

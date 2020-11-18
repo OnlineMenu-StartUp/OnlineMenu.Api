@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OnlineMenu.Api.ViewModel.Authentication;
 using OnlineMenu.Application;
 using OnlineMenu.Application.Services;
-using OnlineMenu.Application.ViewModel;
 
 namespace OnlineMenu.Api.Controllers
 {

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using OnlineMenu.Api.ConfigurationExtensions;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Api.ExceptionHandling;
+using OnlineMenu.Domain;
+using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api
 {
@@ -17,6 +19,7 @@ namespace OnlineMenu.Api
             Configuration = configuration;
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -37,6 +40,9 @@ namespace OnlineMenu.Api
             services.AddScoped<StatusService>();
             services.AddScoped<OrderService>();
             services.AddScoped<CategoryService>();
+            services.AddScoped<ProductService>();
+            services.AddScoped<ToppingService>();
+            
             services.AddScoped<AdminService>();
             services.AddScoped<CustomerService>();
             services.AddScoped<CookService>();

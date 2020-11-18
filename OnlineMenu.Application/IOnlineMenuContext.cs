@@ -13,8 +13,8 @@ namespace OnlineMenu.Application
         DbSet<OrderedProductExtra> OrderedProductExtras { get; set; }
         DbSet<PaymentType> PaymentTypes { get; set; }
         DbSet<Product> Products { get; set; }
-        DbSet<ProductExtra> ProductExtras { get; set; }
-        DbSet<ProductProductExtra> ProductProductExtras { get; set; }
+        DbSet<Topping> Toppings { get; set; }
+        DbSet<ProductTopping> ProductToppings { get; set; }
         DbSet<Status> Statuses { get; set; }
         DbSet<Admin> Admins { get; set; }
         DbSet<Cook> Cooks { get; set; }

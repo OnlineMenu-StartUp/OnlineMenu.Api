@@ -1,4 +1,4 @@
-namespace OnlineMenu.Api
+namespace OnlineMenu.Domain
 {
     public class AppSettings
     {

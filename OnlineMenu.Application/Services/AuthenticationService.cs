@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using OnlineMenu.Api;
+using OnlineMenu.Domain;
 using static System.DateTime;
 using static System.Text.Encoding;
 
@@ -25,7 +25,7 @@ namespace OnlineMenu.Application.Services
             var key = ASCII.GetBytes(jwtKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, claim),
                     new Claim(ClaimTypes.Role, role)

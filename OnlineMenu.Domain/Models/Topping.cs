@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineMenu.Domain.Models
 {
-    public class ProductExtra
+    public class Topping
     {
         public int Id { get; set; }
         
@@ -15,6 +15,6 @@ namespace OnlineMenu.Domain.Models
         [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; }
         
-        public ICollection<ProductProductExtra> ProductProductExtras { get; set; } = new List<ProductProductExtra>();
+        public ICollection<ProductTopping>? ProductLink { get; set; }
     }
 }

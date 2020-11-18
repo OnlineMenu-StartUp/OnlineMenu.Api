@@ -38,10 +38,10 @@ namespace OnlineMenu.Application.Services
             
             var adminFromDb = context.Admins.SingleOrDefault(x => x.UserName == userName);
             if (adminFromDb == null)
-                throw new AuthenticationException();
+                throw new AuthenticationException("Incorrect username or password");
             
             if (!AuthenticationService.VerifyPasswordHash(password, adminFromDb.Password, adminFromDb.PasswordSalt))
-                throw new AuthenticationException();
+                throw new AuthenticationException("Incorrect username or password");
 
             return authenticationService.CreateToken(adminFromDb.Id.ToString(), Roles.Admin);
         }
