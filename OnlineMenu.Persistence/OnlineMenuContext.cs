@@ -1,10 +1,11 @@
-﻿﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using OnlineMenu.Application;
 using OnlineMenu.Domain.Models;
 
 namespace OnlineMenu.Persistence
 {
-    public class OnlineMenuContext : DbContext, IOnlineMenuContext
+    public class OnlineMenuContext: DbContext, IOnlineMenuContext
     {
         public OnlineMenuContext(DbContextOptions<OnlineMenuContext> options): base(options)
         { }

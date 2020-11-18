@@ -36,7 +36,7 @@ namespace OnlineMenu.Application.Services
                     .ThenInclude(pt => pt.Topping)
                     .FirstAsync(p => p.Id == id);
             }
-            catch (InvalidOperationException _)
+            catch (InvalidOperationException)
             {
                 throw new ValueNotFoundException($"Product with id = {id} was not found");
             }
@@ -54,7 +54,7 @@ namespace OnlineMenu.Application.Services
                     .ThenInclude(pe => pe.Topping)
                     .ToListAsync();
             }
-            catch (InvalidOperationException _)
+            catch (InvalidOperationException)
             {
                 throw new ValueNotFoundException($"Product with category name = {categoryName} was not found");
             }
@@ -70,21 +70,35 @@ namespace OnlineMenu.Application.Services
 
         public async Task<Product> UpdateProductAsync(int id, Product product)
         {
-            // TODO: validation
+            if (product.ToppingLinks != null)
+                foreach (var toppingLink in product.ToppingLinks)
+                    if (!await context.Toppings.AnyAsync(t => t.Id == toppingLink.ToppingId))
+                        throw new ValueNotFoundException($"Topping with id = {id} was not found");
+            
+            if (!await context.Categories.AnyAsync(c => c.Id == product.CategoryId))
+                throw new ValueNotFoundException($"Category with id = {id} was not found");
+            if (!await context.Products.AnyAsync(p => p.Id == id))
+                throw new ValueNotFoundException($"Product with id = {id} was not found");
             
             product.Id = id;
-            context.Products.Update(product);
-
+            context.Products.Update(product); // TODO: it can only add related entities, but not delete them
             await context.SaveChangesAsync();
-            return product;
+            return product; // TODO: it doesn't return related entities
         }
 
         public async Task<Product> DeleteProductAsync(int productId)
         {
-            var product = await context.Products.FindAsync(productId);
-            context.Products.Remove(product);
-            await context.SaveChangesAsync();
-            return product;
+            try
+            {
+                var product = await context.Products.FindAsync(productId);
+                context.Products.Remove(product);
+                await context.SaveChangesAsync();
+                return product;
+            }
+            catch (InvalidOperationException)
+            {
+                throw new ValueNotFoundException($"Product with id = {productId} was not found");
+            }
         }
     }
 }

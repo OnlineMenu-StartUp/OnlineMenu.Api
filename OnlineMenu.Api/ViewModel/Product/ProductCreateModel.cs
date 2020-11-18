@@ -17,7 +17,7 @@ namespace OnlineMenu.Api.ViewModel.Product
         [Range(0, 9999999)]
         public decimal Price { get; set; }
         
-        public int? CategoryId { get; set; }
+        public string? Category { get; set; }
         
         public ICollection<ToppingShallowRequestModel> Toppings { get; set; } = new List<ToppingShallowRequestModel>();
     }

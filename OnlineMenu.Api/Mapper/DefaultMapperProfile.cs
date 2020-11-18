@@ -15,26 +15,88 @@ namespace OnlineMenu.Api.Mapper
         {
             CreateMap<Status, StatusDto>().ReverseMap();
 
-            CreateMap<ToppingShallowRequestModel, Topping>();
-            CreateMap<Topping, ToppingShallowResponseModel>();
-            
+            #region Product
+
             CreateMap<ProductUpdateModel, Product>()
-                .ForMember(p => p.ToppingLinks,
+                .ForMember(dest => dest.ToppingLinks,
                     opt => opt.MapFrom<ToppingIdsToToppingLinks, ICollection<int>?>(src => src.ToppingIds));
             
             CreateMap<ProductCreateModel, Product>()
-                .ForMember(p => p.ToppingLinks, 
+                .ForMember(dest => dest.ToppingLinks, 
                     opt => opt.MapFrom<ToppingsToToppingLinks, ICollection<ToppingShallowRequestModel>>(src => src.Toppings));
             
             CreateMap<Product, ProductResponseModel>()
-                .ForMember(pr => pr.Toppings,
+                .ForMember(dest => dest.Toppings,
                     opt => opt.MapFrom<ToppingLinksToToppings, ICollection<ProductTopping>?>(src => src.ToppingLinks))
-                .ForMember(pr => pr.CategoryName,
-                opt => opt.MapFrom<CategoryToCategoryName, Category?>(src => src.Category));
+                .ForMember(dest => dest.CategoryName,
+                    opt => opt.MapFrom<CategoryToCategoryName, Category?>(src => src.Category));
             
+            CreateMap<Product, ProductShallowResponseModel>()
+                .ForMember(dest => dest.CategoryName,
+                    opt => opt.MapFrom<CategoryToCategoryNameShallow, Category?>(src => src.Category));
+
+            #endregion
+            
+            #region Topping
+            
+            CreateMap<ToppingShallowRequestModel, Topping>();
+            
+            CreateMap<ToppingRequestModel, Topping>()
+                .ForMember(dest => dest.ProductLink,
+                    opt => opt.MapFrom<ProductIdsToProductLinks, ICollection<int>?>(src => src.ProductIds));
+            
+            CreateMap<Topping, ToppingShallowResponseModel>();
+            
+            CreateMap<Topping, ToppingResponseModel>()
+                .ForMember(dest => dest.Products,
+                    opt => opt.MapFrom<ProductToppingsToProductShallows, ICollection<ProductTopping>?>(src => src.ProductLink));
+               
+            #endregion Topping
+            
+
         }
     }
 
+    public class ProductIdsToProductLinks : IMemberValueResolver<ToppingRequestModel, Topping, ICollection<int>?, ICollection<ProductTopping>?>
+    {
+        public ICollection<ProductTopping>? Resolve(
+            ToppingRequestModel source, 
+            Topping destination, 
+            ICollection<int>? sourceMember,
+            ICollection<ProductTopping>? destMember,
+            ResolutionContext context)
+        {
+            return sourceMember?.Select(id => new ProductTopping {ProductId = id, Topping = destination}).ToList();
+        }
+    }
+
+    public class ProductToppingsToProductShallows : IMemberValueResolver<Topping, ToppingResponseModel, ICollection<ProductTopping>?, ICollection<ProductShallowResponseModel>>
+    {
+        public ICollection<ProductShallowResponseModel> Resolve(
+            Topping source,
+            ToppingResponseModel destination,
+            ICollection<ProductTopping>? sourceMember,
+            ICollection<ProductShallowResponseModel> destMember,
+            ResolutionContext context)
+        {
+            var products = source.ProductLink?.Select(productLink => productLink.Product);
+            return (products ?? new List<Product>()).Select(p=> context.Mapper.Map<ProductShallowResponseModel>(p)).ToList();
+        }
+    }
+
+    public class CategoryToCategoryNameShallow : IMemberValueResolver<Product, ProductShallowResponseModel, Category?, string?>
+    {
+        public string? Resolve(
+            Product source, 
+            ProductShallowResponseModel destination,
+            Category? sourceMember,
+            string? destMember,
+            ResolutionContext context)
+        {
+            return source.Category?.Name;
+        }
+    }
+    
     public class CategoryToCategoryName : IMemberValueResolver<Product, ProductResponseModel, Category?, string?>
     {
         public string? Resolve(

@@ -39,7 +39,8 @@ namespace OnlineMenu.Api.Controllers
         [HttpGet("by-category/{categoryName}")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByCategory([FromRoute] string categoryName)
         {
-            return Ok(await productService.GetProductsByCategoryNameAsync(categoryName));
+            return Ok((await productService.GetProductsByCategoryNameAsync(categoryName)).
+                Select(p => mapper.Map<Product, ProductResponseModel>(p)));
         }
 
         [Authorize(Roles = Roles.Admin)]
@@ -63,7 +64,7 @@ namespace OnlineMenu.Api.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var product = await productService.DeleteProductAsync(id);
-            return Ok(product);
+            return Ok(mapper.Map<ProductResponseModel>(product));
         }
     }
 }

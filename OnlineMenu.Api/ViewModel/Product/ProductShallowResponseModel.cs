@@ -10,6 +10,6 @@ namespace OnlineMenu.Api.ViewModel.Product
         
         public decimal Price { get; set; }
         
-        public string Category { get; set; } = null!;
+        public string? CategoryName { get; set; } = null!;
     }
 }
