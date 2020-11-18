@@ -41,6 +41,10 @@ namespace OnlineMenu.Persistence
                 .HasOne<Topping>(ppe => ppe.Topping)
                 .WithMany(pe => pe.ProductLink)
                 .HasForeignKey(ppe => ppe.ToppingId);
+            
+            builder.Entity<Category>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
         }
     }
 }

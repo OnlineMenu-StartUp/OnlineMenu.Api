@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Api.ViewModel.Authentication;
@@ -19,7 +18,7 @@ namespace OnlineMenu.Api.Controllers
             this.cookService = cookService;
         }
         
-        [Authorize(Roles.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterModel registerModel)
         {
@@ -28,7 +27,7 @@ namespace OnlineMenu.Api.Controllers
             return Created(string.Empty, null);
         }
 
-        [Authorize(Policy = Roles.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost("registerCook")]
         public IActionResult RegisterCook([FromBody] RegisterModel cookModel)
         {
