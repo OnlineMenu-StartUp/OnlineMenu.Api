@@ -8,6 +8,7 @@ using OnlineMenu.Api.ConfigurationExtensions;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Api.ExceptionHandling;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api
@@ -34,7 +35,8 @@ namespace OnlineMenu.Api
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            var jwtKey = appSettingsSection.Get<AppSettings>().Secrets.JwtKey;
+            var jwtKey = appSettingsSection.Get<AppSettings>().Secrets?.JwtKey;
+            if (jwtKey == null) throw new ConfigurationException(nameof(jwtKey));
             services.ConfigureAuthentication(jwtKey);
 
             services.AddScoped<StatusService>();

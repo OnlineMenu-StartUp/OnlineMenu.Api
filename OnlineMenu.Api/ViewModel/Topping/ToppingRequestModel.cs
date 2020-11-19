@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace OnlineMenu.Api.ViewModel.ProductExtra
+namespace OnlineMenu.Api.ViewModel.Topping
 {
     public class ToppingRequestModel
     {
         [Required]
         [StringLength(30, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Required]
         [Range(0, 9999999)]

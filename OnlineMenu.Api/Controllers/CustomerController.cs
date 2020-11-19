@@ -8,7 +8,7 @@ namespace OnlineMenu.Api.Controllers
         [HttpGet]
         public IActionResult Authenticate()
         {
-            return null; // TODO: Decide how to implement authentication for customers
+            return null!; // TODO: Decide how to implement authentication for customers
         }
     }
 }

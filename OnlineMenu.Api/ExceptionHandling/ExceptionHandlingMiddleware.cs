@@ -1,11 +1,8 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Security.Authentication;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using static Newtonsoft.Json.JsonConvert;
 using OnlineMenu.Domain.Exceptions;
 
 namespace OnlineMenu.Api.ExceptionHandling
@@ -27,6 +24,10 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await next(context);
             } // TODO: When you add a custom exception, you can add a handler here
+            catch (ConfigurationException configurationException)
+            {
+                await HandleConfigurationException(context, configurationException);
+            }
             catch (ValueNotFoundException valueNotFoundException)
             {
                 await HandleValueNotFoundException(context, valueNotFoundException);
@@ -43,6 +44,15 @@ namespace OnlineMenu.Api.ExceptionHandling
             {
                 await HandleExceptionAsync(context, exceptionObj);
             }
+        }
+
+        private async Task HandleConfigurationException(HttpContext context, ConfigurationException configurationException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            if (isDevelopment)
+                await context.Response.WriteAsync($"{configurationException.Message} isn't configured");
+            else
+                await context.Response.WriteAsync("Something went wrong, try again in some minutes");
         }
 
         private async Task HandleValueNotFoundException(HttpContext context, ValueNotFoundException valueNotFoundException)
@@ -64,7 +74,6 @@ namespace OnlineMenu.Api.ExceptionHandling
                 await context.Response.WriteAsync(authenticationException.ToString());
             else
                 await context.Response.WriteAsync(message);
-            // await context.Response.WriteAsync(SerializeObject(new ErrorDto(message)));
         }
 
         private static async Task HandleBadValueExceptionAsync(HttpContext context, ArgumentException badValueException)

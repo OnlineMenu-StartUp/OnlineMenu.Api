@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace OnlineMenu.Domain.Models
 {
@@ -8,12 +9,12 @@ namespace OnlineMenu.Domain.Models
         
         [Required]
         [StringLength(30)]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
+
+        [Required]
+        public byte[] Password { get; set; } = null!;
         
         [Required]
-        public byte[] Password { get; set; }
-        
-        [Required]
-        public byte[] PasswordSalt { get; set; }
+        public byte[] PasswordSalt { get; set; } = null!;
     }
 }

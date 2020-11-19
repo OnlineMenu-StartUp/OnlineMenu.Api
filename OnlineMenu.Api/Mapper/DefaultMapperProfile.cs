@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using OnlineMenu.Api.ViewModel.Product;
-using OnlineMenu.Api.ViewModel.ProductExtra;
+using OnlineMenu.Api.ViewModel.Topping;
 using OnlineMenu.Application.Dto;
 using OnlineMenu.Domain.Models;
 // ReSharper disable ClassNeverInstantiated.Global

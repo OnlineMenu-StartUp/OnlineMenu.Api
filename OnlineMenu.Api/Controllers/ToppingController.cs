@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using OnlineMenu.Api.ViewModel.ProductExtra;
+using OnlineMenu.Api.ViewModel.Topping;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Domain.Models;
 

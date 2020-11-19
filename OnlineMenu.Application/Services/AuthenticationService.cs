@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Exceptions;
 using static System.DateTime;
 using static System.Text.Encoding;
 
@@ -19,8 +20,10 @@ namespace OnlineMenu.Application.Services
         
         public string CreateToken(string claim, string role)
         {
-            var jwtKey = appSettings.Secrets.JwtKey;
+            var jwtKey = appSettings.Secrets?.JwtKey;
 
+            if (jwtKey == null) throw new ConfigurationException(nameof(jwtKey));
+            
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = ASCII.GetBytes(jwtKey);
             var tokenDescriptor = new SecurityTokenDescriptor

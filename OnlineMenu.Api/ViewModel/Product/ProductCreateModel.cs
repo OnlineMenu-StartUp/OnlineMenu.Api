@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using OnlineMenu.Api.ViewModel.ProductExtra;
+using OnlineMenu.Api.ViewModel.Topping;
 
 namespace OnlineMenu.Api.ViewModel.Product
 {
