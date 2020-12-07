@@ -10,7 +10,7 @@ namespace OnlineMenu.Application
         DbSet<Category> Categories { get; set; }
         DbSet<Order> Orders { get; set; }
         DbSet<OrderedProduct> OrderedProducts { get; set; }
-        DbSet<OrderedProductExtra> OrderedProductExtras { get; set; }
+        DbSet<OrderedTopping> OrderedProductExtras { get; set; }
         DbSet<PaymentType> PaymentTypes { get; set; }
         DbSet<Product> Products { get; set; }
         DbSet<Topping> Toppings { get; set; }

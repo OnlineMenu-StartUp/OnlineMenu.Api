@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using OnlineMenu.Api.ConfigurationExtensions;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Api.ExceptionHandling;
+using OnlineMenu.Application.Services.Interfaces;
 using OnlineMenu.Domain;
 using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Persistence;
@@ -48,7 +49,7 @@ namespace OnlineMenu.Api
             services.AddScoped<AdminService>();
             services.AddScoped<CustomerService>();
             services.AddScoped<CookService>();
-            services.AddScoped<AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,7 +62,6 @@ namespace OnlineMenu.Api
 //          app.UseHttpsRedirection();
             
             app.UseMiddleware<ExceptionHandlingMiddleware>(env.IsDevelopment());
-            
             app.UseRouting();
             
             app.UseAuthentication();

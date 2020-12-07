@@ -25,7 +25,7 @@ namespace OnlineMenu.Application.Services
                 .ToListAsync();
         }
         
-        public async Task<Topping> GetToppingById(int id)
+        public async Task<Topping> GetToppingByIdAsync(int id)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace OnlineMenu.Application.Services
             }
             catch (InvalidOperationException)
             {
-                throw new ValueNotFoundException($"Product with id = {id} was not found");
+                throw new ValueNotFoundException($"Topping with id = {id} was not found");
             }
         }
 
@@ -46,15 +46,18 @@ namespace OnlineMenu.Application.Services
             if (!await context.Products.AnyAsync(p => p.Id == productId))
                 throw new ValueNotFoundException($"Product with id = {productId} was not found");
             
+            if (!await context.ProductToppings.AnyAsync(p => p.ProductId == productId))
+                throw new ValueNotFoundException($"Product with id = {productId} doesn't have toppings");
+
             return await context.Toppings
                 .Include(t => t.ProductLink)
                 .ThenInclude(pt => pt.Product)
                 .ThenInclude(p => p.Category)
-                .Where(t => (t.ProductLink ?? new List<ProductTopping>()).Any(pl => pl.ProductId == productId))
+                .Where(t => t.ProductLink!= null && t.ProductLink!.Any(pl => pl.ProductId == productId))
                 .ToListAsync();
         }
 
-        public async Task<Topping> CreateTopping(Topping topping)
+        public async Task<Topping> CreateToppingAsync(Topping topping)
         {
             // ReSharper disable once MethodHasAsyncOverload
             context.Toppings.Add(topping);
@@ -74,7 +77,7 @@ namespace OnlineMenu.Application.Services
             return topping; // TODO: it doesn't return related entities
         }
 
-        public async Task<Topping> DeleteTopping(int id)
+        public async Task<Topping> DeleteToppingAsync(int id)
         {
             var topping = await context.Toppings.FindAsync(id);
             if (topping == null)

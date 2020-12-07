@@ -13,7 +13,7 @@ namespace OnlineMenu.Persistence
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderedProduct> OrderedProducts { get; set; } = null!;
-        public DbSet<OrderedProductExtra> OrderedProductExtras { get; set; } = null!;
+        public DbSet<OrderedTopping> OrderedProductExtras { get; set; } = null!;
         public DbSet<PaymentType> PaymentTypes { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Topping> Toppings { get; set; } = null!;

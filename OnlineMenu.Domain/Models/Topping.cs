@@ -14,7 +14,7 @@ namespace OnlineMenu.Domain.Models
         
         [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; }
-        
+
         public ICollection<ProductTopping>? ProductLink { get; set; }
     }
 }
