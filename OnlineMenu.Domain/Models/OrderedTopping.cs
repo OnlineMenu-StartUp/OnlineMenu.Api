@@ -1,6 +1,6 @@
 namespace OnlineMenu.Domain.Models
 {
-    public class OrderedProductExtra
+    public class OrderedTopping
     {
         public int Id { get; set; }
 

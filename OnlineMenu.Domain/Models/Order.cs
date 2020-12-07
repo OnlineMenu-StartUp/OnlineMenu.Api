@@ -15,6 +15,6 @@ namespace OnlineMenu.Domain.Models
         [Required]
         public ICollection<OrderedProduct> OrderedProducts { get; set; } = new List<OrderedProduct>();
         
-        public ICollection<OrderedProductExtra>? OrderedProductExtras { get; set; } = new List<OrderedProductExtra>();
+        public ICollection<OrderedTopping>? OrderedToppings { get; set; }
     }
 }
