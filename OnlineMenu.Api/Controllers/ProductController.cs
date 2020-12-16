@@ -55,8 +55,9 @@ namespace OnlineMenu.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductUpdateModel productUpdate)
         {
-            var product = await productService.UpdateProductAsync(id, mapper.Map<Product>(productUpdate));
-            return Ok(mapper.Map<ProductResponseModel>(product));
+            var updatedProduct = await productService.UpdateProductAsync(id, mapper.Map<Product>(productUpdate));
+            var productFromDb = await productService.GetProductByIdAsync(updatedProduct.Id); // TODO: To optimize
+            return Ok(mapper.Map<ProductResponseModel>(productFromDb));
         }
 
         [Authorize(Roles = Roles.Admin)]

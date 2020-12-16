@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using OnlineMenu.Application.Dto;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Domain.Models;
 
@@ -21,24 +20,17 @@ namespace OnlineMenu.Api.Controllers
         }
         
         [HttpGet]
-        public ActionResult<IEnumerable<StatusDto>> GetStatusList()
+        public async Task<ActionResult<IEnumerable<Status>>> GetStatusList()
         {
-            var statuses = statusService.GetStatuses();
-            var statusResultList = statuses.Select(status => mapper.Map<StatusDto>(status)).ToList();
-
-            return Ok(statusResultList);
+            return Ok(await statusService.GetStatuses());
         }
         
         [HttpPost]
-        public ActionResult<StatusDto> CreateStatus(StatusDto status)
-        {
-            // The client shouldn't be able to provide an id. 
-            // It is not the case to create a new Request DTO for Status entity
-            status.Id = null;
-            
-            var createdStatus = statusService.CreateStatus(mapper.Map<Status>(status));
+        public async Task<ActionResult<Status>> CreateStatus(string statusName)
+        {   
+            var createdStatus = await statusService.CreateStatus(statusName);
             var createdStatusUrl = $"{Request.GetDisplayUrl()}/{createdStatus.Id}";
-            return Created(createdStatusUrl ,mapper.Map<StatusDto>(createdStatus));
+            return Created(createdStatusUrl ,mapper.Map<Status>(createdStatus));
         }
     }
 }

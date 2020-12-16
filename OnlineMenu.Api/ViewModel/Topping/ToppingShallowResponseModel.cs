@@ -2,7 +2,7 @@ namespace OnlineMenu.Api.ViewModel.Topping
 {
     public class ToppingShallowResponseModel
     {
-        public ToppingShallowResponseModel(int id, string name, decimal price)
+        public ToppingShallowResponseModel(int id, string name, decimal price) // TODO: add constructors to all response models 
         {
             Id = id;
             Name = name;

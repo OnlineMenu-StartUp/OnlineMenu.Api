@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using OnlineMenu.Api.ViewModel.Order;
+using OnlineMenu.Api.ViewModel.OrderedProduct;
+using OnlineMenu.Api.ViewModel.OrderedTopping;
 using OnlineMenu.Api.ViewModel.Product;
 using OnlineMenu.Api.ViewModel.Topping;
-using OnlineMenu.Application.Dto;
 using OnlineMenu.Domain.Models;
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -13,8 +15,6 @@ namespace OnlineMenu.Api.Mapper
     {
         public DefaultMapperProfile()
         {
-            CreateMap<Status, StatusDto>().ReverseMap();
-
             #region Product
 
             CreateMap<ProductUpdateModel, Product>()
@@ -52,8 +52,68 @@ namespace OnlineMenu.Api.Mapper
                     opt => opt.MapFrom<ProductToppingsToProductShallows, ICollection<ProductTopping>?>(src => src.ProductLink));
                
             #endregion Topping
-            
 
+            #region MyRegion
+
+            CreateMap<OrderRequestModel, Order>()
+                .ForMember(dest => dest.OrderedProducts,
+                    opt => opt.MapFrom<OrderedProductRequestsToOrderedProducts, ICollection<OrderedProductRequestModel>>(src => src.OrderedProducts));
+
+            CreateMap<Order, OrderResponseModel>()
+                .ForMember(dest => dest.OrderedProducts,
+                    opt => opt.MapFrom<OrderedProductsToOrderedProductRequests, ICollection<OrderedProduct>>(src => src.OrderedProducts));
+
+            
+            #endregion Order
+        }
+    }
+
+    public class OrderedProductsToOrderedProductRequests : IMemberValueResolver<Order, OrderResponseModel, ICollection<OrderedProduct>, ICollection<OrderedProductResponseModel>>
+    {
+        public ICollection<OrderedProductResponseModel> Resolve(
+            Order source,
+            OrderResponseModel destination,
+            ICollection<OrderedProduct> sourceMember,
+            ICollection<OrderedProductResponseModel> destMember,
+            ResolutionContext context)
+        {
+            return source.OrderedProducts.Select(op =>
+                new OrderedProductResponseModel
+                {
+                    Id = op.Id,
+                    Count = op.Count,
+                    OrderedToppings = op.OrderedToppings?.Select(ot =>
+                        new OrderedToppingResponseModel
+                        {
+                            Id = ot.Id,
+                            Count = ot.Count,
+                            Topping = context.Mapper.Map<ToppingShallowResponseModel>(ot.Topping)
+                        }).ToList()
+                }).ToList();
+        }
+    }
+
+    public class OrderedProductRequestsToOrderedProducts : IMemberValueResolver<OrderRequestModel, Order, ICollection<OrderedProductRequestModel>, ICollection<OrderedProduct>>
+    {
+        public ICollection<OrderedProduct> Resolve(
+            OrderRequestModel source, 
+            Order destination,
+            ICollection<OrderedProductRequestModel> sourceMember,
+            ICollection<OrderedProduct> destMember,
+            ResolutionContext context)
+        {
+            return source.OrderedProducts.Select(op =>
+                new OrderedProduct
+                {
+                    Count = op.Count,
+                    ProductId = op.ProductId,
+                    OrderedToppings = op.OrderedToppings?.Select(ot =>
+                        new OrderedTopping
+                        {
+                            Count = ot.Count,
+                            ToppingId = ot.ToppingId
+                        }).ToList()
+                }).ToList();
         }
     }
 
