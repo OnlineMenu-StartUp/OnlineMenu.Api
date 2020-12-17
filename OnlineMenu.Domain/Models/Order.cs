@@ -10,11 +10,12 @@ namespace OnlineMenu.Domain.Models
         public PaymentType? PaymentType { get; set; }
         
         [Required]
+        public int StatusId { get; set; }
+        
+        [Required]
         public Status Status { get; set; } = null!;
         
         [Required]
         public ICollection<OrderedProduct> OrderedProducts { get; set; } = new List<OrderedProduct>();
-        
-        public ICollection<OrderedTopping>? OrderedToppings { get; set; }
     }
 }

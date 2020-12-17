@@ -27,5 +27,15 @@
     <Compile Remove="Mapper\StatusProfile.cs" />
     <Compile Remove="ViewModel\Authentication\Authentication\AuthenticateResponseModel.cs" />
     <Compile Remove="ViewModel\Authentication\Authentication\Authentication\Authentication\AuthenticateResponseModel.cs" />
+    <Compile Remove="ViewModel\OrderedToppings\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="ViewModel\OrderedToppings\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ViewModel\OrderedToppings\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="ViewModel\OrderedToppings\**" />
   </ItemGroup>
 </Project>

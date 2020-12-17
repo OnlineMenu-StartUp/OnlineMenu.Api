@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Domain.Models;
 
@@ -14,22 +16,20 @@ namespace OnlineMenu.Application.Services
             this.context = context;
         }
         
-        public IEnumerable<Status> GetStatuses()
+        public Task<List<Status>> GetStatuses()
         {
-            return context.Statuses;
+            return context.Statuses.ToListAsync();
         }
 
-        public Status CreateStatus(Status status)
+        public async Task<Status> CreateStatus(string statusName)
         {
-            var alreadyExists = context.Statuses.Any(s => s.Name == status.Name);
-            
-            if (alreadyExists)
+            if (await context.Statuses.AnyAsync(s => s.Name == statusName))
             {
-                throw new BadValueException($"The value [{status.Name}] already exists");
+                throw new BadValueException($"The value [{statusName}] already exists");
             }
             
-            var savedStatus = context.Statuses.Add(status); 
-            context.SaveChanges();
+            var savedStatus = context.Statuses.Add(new Status{Name = statusName}); 
+            await context.SaveChangesAsync();
             
             return savedStatus.Entity;
         }

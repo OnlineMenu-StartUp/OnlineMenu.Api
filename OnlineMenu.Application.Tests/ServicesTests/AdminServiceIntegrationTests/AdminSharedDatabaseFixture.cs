@@ -14,7 +14,7 @@ namespace OnlineMenu.Application.Tests.ServicesTests.AdminServiceIntegrationTest
     
         public AdminSharedDatabaseFixture()
         {
-            Connection = new SqlConnection("Server = 161.35.208.211; Database=OnlineMenuTest; User Id=sa; Password=caraC@ctus47; Persist Security Info=true");
+            Connection = new SqlConnection("Server = 161.35.208.211; Database=OnlineMenuTest2; User Id=sa; Password=caraC@ctus47; Persist Security Info=true");
 
             Seed();
         
