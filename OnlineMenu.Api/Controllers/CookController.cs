@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Api.ViewModel.Authentication;
 using OnlineMenu.Application.Services;
@@ -14,9 +15,9 @@ namespace OnlineMenu.Api.Controllers
         }
         
         [HttpPost("authenticate")]
-        public ActionResult<AuthenticateResponseModel> Authenticate([FromBody] AuthenticateRequestModel model)
+        public async Task<ActionResult<AuthenticateResponseModel>> Authenticate([FromBody] AuthenticateRequestModel model)
         {
-            var authToken = cookService.Authenticate(model.UserName, model.Password);
+            var authToken = await cookService.AuthenticateAsync(model.UserName, model.Password);
             
             return Ok(new AuthenticateResponseModel(model.UserName, authToken));
         }

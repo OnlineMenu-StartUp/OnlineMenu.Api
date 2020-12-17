@@ -10,11 +10,11 @@ namespace OnlineMenu.Domain.Models
         
         [Required]
         [StringLength(30)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
         [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; }
-        
+
         public ICollection<ProductTopping>? ProductLink { get; set; }
     }
 }

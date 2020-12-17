@@ -10,7 +10,7 @@ namespace OnlineMenu.Domain.Models
         
         [Required]
         [StringLength(30)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
         [StringLength(500)]
         public string? Description { get; set; }

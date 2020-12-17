@@ -1,10 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 namespace OnlineMenu.Api.ViewModel.Authentication
 {
     public class AuthenticateRequestModel
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public string UserName { get; set; } = null!;
+        public string Password { get; set; } = null!;
     }
 }

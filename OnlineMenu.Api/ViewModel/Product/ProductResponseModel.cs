@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using OnlineMenu.Api.ViewModel.ProductExtra;
+using OnlineMenu.Api.ViewModel.Topping;
 
 namespace OnlineMenu.Api.ViewModel.Product
 {

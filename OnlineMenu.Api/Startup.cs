@@ -7,7 +7,9 @@ using Microsoft.Extensions.Hosting;
 using OnlineMenu.Api.ConfigurationExtensions;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Api.ExceptionHandling;
+using OnlineMenu.Application.Services.Interfaces;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Exceptions;
 using OnlineMenu.Persistence;
 
 namespace OnlineMenu.Api
@@ -34,7 +36,8 @@ namespace OnlineMenu.Api
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            var jwtKey = appSettingsSection.Get<AppSettings>().Secrets.JwtKey;
+            var jwtKey = appSettingsSection.Get<AppSettings>().Secrets?.JwtKey;
+            if (jwtKey == null) throw new ConfigurationException(nameof(jwtKey));
             services.ConfigureAuthentication(jwtKey);
 
             services.AddScoped<StatusService>();
@@ -46,7 +49,7 @@ namespace OnlineMenu.Api
             services.AddScoped<AdminService>();
             services.AddScoped<CustomerService>();
             services.AddScoped<CookService>();
-            services.AddScoped<AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +62,6 @@ namespace OnlineMenu.Api
 //          app.UseHttpsRedirection();
             
             app.UseMiddleware<ExceptionHandlingMiddleware>(env.IsDevelopment());
-            
             app.UseRouting();
             
             app.UseAuthentication();

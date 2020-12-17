@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMenu.Application", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMenu.Domain", "OnlineMenu.Domain\OnlineMenu.Domain.csproj", "{40CBDA89-9AA6-4F9D-B719-1460DEED07B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2E159969-FDEE-4A20-9188-9D998075FABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMenu.Application.Tests", "OnlineMenu.Application.Tests\OnlineMenu.Application.Tests.csproj", "{728619C3-A1F2-47A7-8325-E6AA84249200}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +35,12 @@ Global
 		{40CBDA89-9AA6-4F9D-B719-1460DEED07B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40CBDA89-9AA6-4F9D-B719-1460DEED07B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40CBDA89-9AA6-4F9D-B719-1460DEED07B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{728619C3-A1F2-47A7-8325-E6AA84249200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{728619C3-A1F2-47A7-8325-E6AA84249200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{728619C3-A1F2-47A7-8325-E6AA84249200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{728619C3-A1F2-47A7-8325-E6AA84249200}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{728619C3-A1F2-47A7-8325-E6AA84249200} = {2E159969-FDEE-4A20-9188-9D998075FABA}
 	EndGlobalSection
 EndGlobal

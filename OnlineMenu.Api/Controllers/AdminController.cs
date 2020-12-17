@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineMenu.Api.ViewModel.Authentication;
@@ -20,26 +21,26 @@ namespace OnlineMenu.Api.Controllers
         
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterModel registerModel)
+        public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            adminService.Create(registerModel.UserName, registerModel.Password);
+            await adminService.CreateAsync(registerModel.UserName, registerModel.Password);
 
             return Created(string.Empty, null);
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost("registerCook")]
-        public IActionResult RegisterCook([FromBody] RegisterModel cookModel)
+        public async Task<IActionResult> RegisterCook([FromBody] RegisterModel cookModel)
         {
-            cookService.Create(cookModel.UserName, cookModel.Password);
+            await cookService.CreateAsync(cookModel.UserName, cookModel.Password);
 
             return Created(string.Empty, null);
         }
 
         [HttpPost("authenticate")]
-        public ActionResult<AuthenticateResponseModel> Authenticate([FromBody] AuthenticateRequestModel model)
+        public async Task<ActionResult<AuthenticateResponseModel>> Authenticate([FromBody] AuthenticateRequestModel model)
         {
-            var authToken = adminService.Authenticate(model.UserName, model.Password);
+            var authToken = await adminService.AuthenticateAsync(model.UserName, model.Password);
             
             return Ok(new AuthenticateResponseModel(model.UserName, authToken));
         }

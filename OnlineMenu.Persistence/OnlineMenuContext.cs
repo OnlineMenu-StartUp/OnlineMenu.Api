@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using OnlineMenu.Application;
 using OnlineMenu.Domain.Models;
+// ReSharper disable RedundantTypeArgumentsOfMethod
 
 namespace OnlineMenu.Persistence
 {
@@ -10,18 +10,18 @@ namespace OnlineMenu.Persistence
         public OnlineMenuContext(DbContextOptions<OnlineMenuContext> options): base(options)
         { }
 
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderedProduct> OrderedProducts { get; set; }
-        public DbSet<OrderedProductExtra> OrderedProductExtras { get; set; }
-        public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Topping> Toppings { get; set; }
-        public DbSet<ProductTopping> ProductToppings { get; set; }
-        public DbSet<Status> Statuses { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Cook> Cooks { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderedProduct> OrderedProducts { get; set; } = null!;
+        public DbSet<OrderedTopping> OrderedProductExtras { get; set; } = null!;
+        public DbSet<PaymentType> PaymentTypes { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<Topping> Toppings { get; set; } = null!;
+        public DbSet<ProductTopping> ProductToppings { get; set; } = null!;
+        public DbSet<Status> Statuses { get; set; } = null!;
+        public DbSet<Admin> Admins { get; set; } = null!;
+        public DbSet<Cook> Cooks { get; set; } = null!;
+        public DbSet<Customer> Customers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

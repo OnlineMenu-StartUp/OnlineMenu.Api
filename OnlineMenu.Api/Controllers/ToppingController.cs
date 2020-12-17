@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using OnlineMenu.Api.ViewModel.ProductExtra;
+using OnlineMenu.Api.ViewModel.Topping;
 using OnlineMenu.Application.Services;
 using OnlineMenu.Domain.Models;
 
@@ -29,7 +29,7 @@ namespace OnlineMenu.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<ToppingResponseModel>>> GetTopic([FromRoute] int id)
         {
-            return Ok(mapper.Map<ToppingResponseModel>(await toppingService.GetToppingById(id)));
+            return Ok(mapper.Map<ToppingResponseModel>(await toppingService.GetToppingByIdAsync(id)));
         }
         
         [HttpGet("by-productId/{productId}")]
@@ -41,7 +41,7 @@ namespace OnlineMenu.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Topping>> CreateTopping([FromBody] ToppingShallowRequestModel toppingCreate)
         {
-            var createdTopping = await toppingService.CreateTopping(mapper.Map<Topping>(toppingCreate));
+            var createdTopping = await toppingService.CreateToppingAsync(mapper.Map<Topping>(toppingCreate));
             return Created("", mapper.Map<ToppingResponseModel>(createdTopping));
         }
 
@@ -55,7 +55,7 @@ namespace OnlineMenu.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Topping>> DeleteTopping([FromRoute] int id)
         {
-            var deletedTopping = await toppingService.DeleteTopping(id);
+            var deletedTopping = await toppingService.DeleteToppingAsync(id);
             return Ok(mapper.Map<ToppingResponseModel>(deletedTopping));
         }
     }

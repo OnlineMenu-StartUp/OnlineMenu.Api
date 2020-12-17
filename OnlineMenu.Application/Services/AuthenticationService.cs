@@ -2,13 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OnlineMenu.Application.Services.Interfaces;
 using OnlineMenu.Domain;
+using OnlineMenu.Domain.Exceptions;
 using static System.DateTime;
 using static System.Text.Encoding;
 
 namespace OnlineMenu.Application.Services
 {
-    public class AuthenticationService
+    public class AuthenticationService: IAuthenticationService
     {
         private readonly AppSettings appSettings;
         
@@ -17,17 +19,19 @@ namespace OnlineMenu.Application.Services
             appSettings = appSettingsOptions.Value;
         }
         
-        public string CreateToken(string claim, string role)
+        public string CreateToken(int userId, string role)
         {
-            var jwtKey = appSettings.Secrets.JwtKey;
+            var jwtKey = appSettings.Secrets?.JwtKey;
 
+            if (string.IsNullOrWhiteSpace(jwtKey)) throw new ConfigurationException(nameof(jwtKey));
+            
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = ASCII.GetBytes(jwtKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, claim),
+                    new Claim(ClaimTypes.Name, userId.ToString()),
                     new Claim(ClaimTypes.Role, role)
                 }),
                 Expires = UtcNow.AddHours(appSettings.JwtExpirationTimeHours),
@@ -38,24 +42,6 @@ namespace OnlineMenu.Application.Services
             var tokenString = tokenHandler.WriteToken(token);
             
             return tokenString;
-        }
-        
-        public static (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)
-        {
-            using var hmac = new System.Security.Cryptography.HMACSHA512(); // Randomly generates a key (salt)
-            var passwordSalt = hmac.Key;
-            var passwordHash = hmac.ComputeHash(UTF8.GetBytes(password));
-            return (passwordHash, passwordSalt);
-        }
-        
-        public static bool VerifyPasswordHash(string password, byte[] storedPasswordHash, byte[] storedSalt)
-        {
-            using var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt);
-            var computedHash = hmac.ComputeHash(UTF8.GetBytes(password));
-
-            for (var i = 0; i < computedHash.Length; i++)
-                if (computedHash[i] != storedPasswordHash[i]) return false;
-            return true;
         }
     }
 }
