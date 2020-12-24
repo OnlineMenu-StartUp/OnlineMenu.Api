@@ -35,10 +35,10 @@ namespace OnlineMenu.Api.Mapper
                 .ForMember(dest => dest.CategoryName,
                     opt => opt.MapFrom<CategoryToCategoryNameShallow, Category?>(src => src.Category));
 
-            #endregion
-            
+            # endregion Product
+
             #region Topping
-            
+
             CreateMap<ToppingShallowRequestModel, Topping>();
             
             CreateMap<ToppingRequestModel, Topping>()
@@ -53,7 +53,7 @@ namespace OnlineMenu.Api.Mapper
                
             #endregion Topping
 
-            #region MyRegion
+            #region Order
 
             CreateMap<OrderRequestModel, Order>()
                 .ForMember(dest => dest.OrderedProducts,
@@ -61,10 +61,29 @@ namespace OnlineMenu.Api.Mapper
 
             CreateMap<Order, OrderResponseModel>()
                 .ForMember(dest => dest.OrderedProducts,
-                    opt => opt.MapFrom<OrderedProductsToOrderedProductRequests, ICollection<OrderedProduct>>(src => src.OrderedProducts));
+                    opt => opt.MapFrom<OrderedProductsToOrderedProductRequests, ICollection<OrderedProduct>>(src =>
+                        src.OrderedProducts))
+                .ForMember(dest => dest.PaymentType,
+                    opt => opt.MapFrom<PaymentTypeToString, PaymentType?>(src => src.PaymentType));
+            // .ForMember(dest => dest.Status,
+            //     opt => opt.MapFrom<OrderedProductsToOrderedProductRequests, ICollection<OrderedProduct>>(src => src.OrderedProducts));
 
-            
+
+
             #endregion Order
+        }
+    }
+
+    internal class PaymentTypeToString : IMemberValueResolver<Order, OrderResponseModel, PaymentType?, string?>
+    {
+        public string? Resolve(
+            Order source,
+            OrderResponseModel destination,
+            PaymentType? sourceMember,
+            string? destMember,
+            ResolutionContext context)
+        {
+            return sourceMember?.Name;
         }
     }
 

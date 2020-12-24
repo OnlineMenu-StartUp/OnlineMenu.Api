@@ -15,8 +15,8 @@ namespace OnlineMenu.Application.Tests.ServicesTests.AdminServiceIntegrationTest
         public AdminServiceIntegrationTests(AdminSharedDatabaseFixture fixture) => Fixture = fixture;
         private AdminSharedDatabaseFixture Fixture { get; }
         
-        // [Fact]
-        [Fact (Skip = "specific reason")]
+        [Fact]
+        // [Fact (Skip = "specific reason")]
         public async Task CreateAdmin_Test()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace OnlineMenu.Application.Tests.ServicesTests.AdminServiceIntegrationTest
         }
 
         [Fact]
-        public async Task CreateAdmin_AlreadyExistingUsername_ArgumentException_Test()
+        public async Task CreateAdmin_ExistingUsername_ArgumentException_Test()
         {
             // Arrange
             var existingUsername = DummyData.Admin.UserName;

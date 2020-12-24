@@ -35,7 +35,7 @@ namespace OnlineMenu.Api.Controllers
         {
             return Ok((await orderService.GetOrdersAsync()).Select(order => mapper.Map<OrderResponseModel>(order)));
         }
-
+        
         [HttpPost]
         public async Task<ActionResult<OrderResponseModel>> CreateOrder([FromBody] OrderRequestModel order)
         {

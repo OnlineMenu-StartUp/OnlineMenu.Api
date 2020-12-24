@@ -50,6 +50,7 @@ namespace OnlineMenu.Application.Services
 
         public async Task<Order> CreateOrderAsync(Order order)
         {
+            order.Status = await context.Statuses.FirstAsync(s => s.Name == DefaultStatus.ReadyToCook);
             context.Orders.Add(order);
             await context.SaveChangesAsync();
             return order;
@@ -59,8 +60,10 @@ namespace OnlineMenu.Application.Services
         {
             if (await context.Statuses.AnyAsync(s => s.Id == order.StatusId)) 
                 throw new ValueNotFoundException($"Status with id = {id} was not found");
-
+            
+            
             order.Id = id;
+            
             context.Orders.Update(order);
             await context.SaveChangesAsync();
             return order;
