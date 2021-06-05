@@ -6,6 +6,11 @@
   </PropertyGroup>
 
 
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\OnlineMenu.Application\OnlineMenu.Application.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
